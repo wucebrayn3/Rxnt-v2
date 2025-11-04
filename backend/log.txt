@@ -1,0 +1,21 @@
+pip install
+django djangorestframework djangorestframework-simplejwt django-cors-headers
+
+allow vite localhost, usually 5173
+allow all host
+
+installed apps +
+api (app name, usually the core app)
+corsheaders
+rest_framework
+rest_framework.authtoken
+psycopg2-binary
+python-dotenv
+
+middleware +
+cors.middleware.CorsMiddleware
+
+
+
+
+JSON Web Token - acts as permission or authentication when we access a website

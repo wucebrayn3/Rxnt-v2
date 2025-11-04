@@ -1,0 +1,24 @@
+npm create vite@latest rxntv2
+React framework
+JavaScript (plain JS)
+
+npm i
+
+removed App.jsx contents except function
+removed App.css
+
+created components folder
+added Login and Register jsx
+
+installed:
+axios
+react-router-dom
+@reduxjs/toolkit
+react-redux
+
+in Login.jsx
+create the form, remove action, method is POST, add onSubmit and function
+import useNavigate
+
+in App.jsx
+import BrowserRouter as Router, Routes, Route
