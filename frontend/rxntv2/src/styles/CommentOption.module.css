@@ -1,0 +1,41 @@
+.main {
+    display: flex;
+    gap: 20px;
+}
+
+.confirm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    border: 1px black solid;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.confirm div {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.confirm button {
+    width: 45%;
+    height: 85%
+}
+
+.deletebtn {
+    background-color: #ef233c;
+    color: white;
+}
+
+.edittt, .deleteee {
+    cursor: pointer;
+}
+
+.deleteee {
+    color: #ef233c;
+}

@@ -6,10 +6,10 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column-reverse;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
     background-color: #F2F4F7;
-    padding-top: 60px;
+    padding-top: 80px;
 }
 
 .post_container {
@@ -41,7 +41,34 @@
     border-radius: 0 0 15px 15px; 
     padding: 10px; 
     background-color: #FEFEFE; 
-    box-shadow: 0 5px 5px rgba(0,0,0,0.25)
+    box-shadow: 0 5px 5px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.content * {
+    margin: 0;
+}
+
+.content form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.content form textarea{
+    width: 80%;
+}
+
+.content form input[type='submit']{
+    width: fit-content;
+    padding: 5px;
+    background-color: #535bf2;
+}
+
+.content form textarea{
+    resize: none;
 }
 
 .comment_container{
@@ -51,14 +78,22 @@
     box-sizing: border-box;
     border-radius: 10px;
     width: 100%;
+    height: fit-content;
+    max-height: 500px;
+    overflow: scroll;
     background-color: #F0F2F5;
     padding: 10px;
     box-shadow: inset 0 5px 7.5px rgba(0,0,0,0.25);
     gap: 40px;
 }
 
+.comment_container::-webkit-scrollbar{
+    display: none;
+}
+
 .comment_subcontainer {
-    height: fit-content; 
+    height: fit-content;
+    width: 100%;
     padding-left: 20px;
     display: flex;
     flex-direction: column;
@@ -70,7 +105,10 @@
 }
 
 .comment_item {
+    width: fit-content;
     border: 1px black solid; 
+    background-color: white;
+    flex-shrink: 1;
     border-radius: 10px; 
     padding: 10px;
 
@@ -84,9 +122,8 @@
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 5px 10px rgba(0,0,0,0.5);
-    height: 40vh;
+    height: fit-content;
     width: 50vw;
-    max-height: 600px;
     max-width: 1000px;
     z-index: 1000; 
     color: black;
@@ -108,7 +145,7 @@
     gap: 10px;
 }
 
-.post_panel input, .post_panel form textarea {
+.post_panel input, .post_panel form textarea, .content input, .content textarea {
     color: black;
     border: 2px black solid;
     border-radius: 10px;
@@ -127,7 +164,7 @@
     box-shadow: none;
 }
 
-.post_panel form input[type='text'] {
+.post_panel form input[type='text'], .content input[type='text'], .content textarea {
     font-size: 1rem;
     padding: 5px;
     width: 40%;

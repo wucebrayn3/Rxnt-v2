@@ -11,6 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
+        print(validated_data)
         return user
     
 class PostSerializer(serializers.ModelSerializer):
@@ -19,6 +20,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'title', 'content', 'created_at', 'author', 'comments']
+        extra_kwargs = {'author': {'read_only': True}}
         
     def get_comments(self, obj):
         comments = obj.comments.all()
@@ -37,12 +39,19 @@ class CommentSerializer(serializers.ModelSerializer):
     
 class UserProfileSerializer(serializers.ModelSerializer):
     posts = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
     
     class Meta:
         model = User
-        fields = ['id', 'username', 'posts']
+        fields = ['id', 'username', 'posts', 'comments'] # need to add 'comments' field
         
     def get_posts(self, obj):
-        print(obj)
         user_post = Post.objects.filter(author=obj)
+        # print(f"Obj value: {obj}\n{PostSerializer(Post.objects.filter(author=obj), many=True).data}")
+        print(CommentSerializer(Comment.objects.filter(author=obj))) # this gets all the comments owned by current user
         return PostSerializer(user_post, many=True).data
+    
+    def get_comments(self, obj):
+        user_comment = Comment.objects.filter(author=obj)
+        return CommentSerializer(user_comment, many=True).data
+    

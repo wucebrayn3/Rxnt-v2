@@ -22,3 +22,53 @@ import useNavigate
 
 in App.jsx
 import BrowserRouter as Router, Routes, Route
+
+
+
+
+
+NOTE:
+
+need to fix requests, too many requests on load. Fix if possible or maybe it's just a normal web behaviour
+caching of static files like css and images
+
+
+TO FIX: 
+1. In user's profile view, seperate edit and delete components.
+
+
+TO DISCUSS:
+
+1. Sharing posts feature
+2. Tagging/mentions
+3. Moderator roles
+4. Extended 
+5. Account deactivation
+6. Ads (more likely to be added than the rest)
+
+
+
+TO ADD:
+
+1. dashboard
+
+2. report feature:
+            - on user side, submit reasons
+            - on admin side, can see who reported, who is reported, item reported, reasons provided, date submitted
+            - admin can provide reasons aside but not excluding the provided reason
+            - on user side (owner of reported content), which item was reported, why was it reported provided and formalized by admin
+
+3. comments on user's posts can be removed and hidden by the user
+
+4. all items belonging to the user can be deleted or edited
+
+5. admin privileges:access to dashboard
+                    see everything
+                    accept/reject reuests (reports)
+                    remove posts, comments and replies (direct removal is for superadmin)
+                    temporarily ban users (perma ban can be done by superadmin)
+                    directly send notifications (warnings)
+
+6. Like post, comment and reply
+
+7. Account deletion (by user)

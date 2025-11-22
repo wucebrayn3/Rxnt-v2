@@ -1,8 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
+from django.contrib.auth import logout
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import UserSerializer, CommentSerializer, PostSerializer, UserProfileSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -16,6 +19,17 @@ class CreateUserView(generics.CreateAPIView): # will automatically handle create
     queryset = User.objects.all() # the list of all the differet objects, to avoid duplication
     serializer_class = UserSerializer # tells what data is needed to accept to make a new user (username, password)
     permission_classes = [AllowAny]  # Allow anyone to access this view for registration
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logoutView(request):
+    try:
+        refresh_token = request.data['refresh']
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+        return Response({'message': 'Logged out'})
+    except Exception as e:
+        return Response({'error': f'{e}, invalid token'})
     
 class CommentsView(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
@@ -46,5 +60,90 @@ class UserProfileView(APIView):
     
     def get(self, request, id):
         user = User.objects.get(id=id)
+        print(f'Narito ako: {user} - {id}')
+        print(f'Userprofileview user: {self.request.user}')
         serializer = UserProfileSerializer(user)
         return Response(serializer.data)
+    
+class UserCommentView(APIView): # Posts with user's comments will apear in profile view.
+    permission_classes = [IsAuthenticated]
+    
+    def get():
+        return
+    
+class CreatePostView(generics.ListCreateAPIView):
+    serializer_class = PostSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        return Post.objects.filter(author=user)
+    
+    def perform_create(self, serializer):
+        # serializer is already validated by the view before perform_create is called
+        serializer.save(author=self.request.user)
+        print(self.request.user)
+            
+class CreateCommentView(generics.ListCreateAPIView):
+    serializer_class = CommentSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        print(f'{self.request.user} commented')
+        return Comment.objects.filter(author=user)
+    
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+        print(f'{self.request.user} commented')
+            
+class DeletePostView(generics.DestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        return Post.objects.filter(author=user)
+    
+class EditPostView(generics.UpdateAPIView):
+    serializer_class = PostSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'
+    
+    def get_queryset(self):
+        user = self.request.user
+        return Post.objects.filter(author=user)
+    
+    def perform_update(self, serializer):
+        print(f'Edit stat: {serializer}\nEdit info: {self.request.user}')
+        serializer.save()
+        return f'Post updated by {self.request.user}'
+    
+class EditCommentView(generics.UpdateAPIView):
+    serializer_class = CommentSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'
+    
+    def get_queryset(self):
+        user = self.request.user
+        return Comment.objects.filter(author=user)
+    
+    def perform_update(self, serializer):
+        serializer.save()
+        return 'Naedit na'
+
+class DeleteCommentView(generics.DestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        return Comment.objects.filter(author=user)

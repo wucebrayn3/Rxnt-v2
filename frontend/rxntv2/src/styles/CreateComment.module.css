@@ -1,0 +1,25 @@
+.main form {
+    display: flex;
+    gap: 10px;
+}
+
+.main form input[type='submit'] {
+    width: 20%;
+    min-width: fit-content;
+    max-width: 30px;
+    padding: 5px;
+    
+    color: black;
+}
+
+.main input {
+    background-color: #F0F2F5;
+    color: black;
+    border: 2px black solid;
+    border-radius: 10px;
+}
+
+.main input[type='text'] {
+    font-size: 1rem;
+    padding: 5px;
+}

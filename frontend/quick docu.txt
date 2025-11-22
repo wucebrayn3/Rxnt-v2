@@ -1,0 +1,63 @@
+Proper component hierarchy:
+
+Data will be stored in a state, data will always be changing and it is stored in a state as
+it has to be updated and displayed constantly.
+
+Updating a state within a component triggers a re-render, a reason for a proper component hierarchy.
+
+Storing all and displaying all in a single component is light but will not scale.
+Creating a proper component hierarchy will scale as loading each data and updating will be independent, meaning
+that re-rendering will only occur on a specific item rather than reloading and re-rendering all items at once repeatedly.
+
+Threads.jsx
+    - contains all posts, comments and replies
+
+Post.jsx
+    - contains a single post item
+    - contains Comments.jsx
+
+Comments.jsx
+    - contains all comments and nested comments
+
+Reply.jsx
+    - parent and non-parent items
+    - only child components
+
+Comment.jsx
+    - contains single comment item
+    - non-parent comment
+    - will contain an empty component
+    - contains Reply.jsx which will only be empty if the loaded comment has no replies
+    - Reply.jsx will only appear inside based on condition to avoid mapping errors.
+
+This way, updating a comment by replying to it will only trigger a re-render on the target item.
+
+Creating a post calls Post.jsx
+Creating a comment calls comments and calls comment.jsx
+
+Infinite Scrolling:
+
+load first batch
+display 1st batch
+
+scroll to last item in the current batch
+load 2nd batch
+display 2nd batch
+show throbber / spinner while the next batch is being loaded for displaying
+
+repeat process til 5th batch
+scroll to last item in 5th batch
+load 6th
+display 6th
+scroll into 6th
+remove 1st batch
+2nd batch becomes the new 1st batch
+the 6th batch becomes the new 5th batch
+
+repeat process when going further
+
+scrolling back to top will reverse the process
+scroll from 6th to fifth
+remove 6th when out of sight
+bring back original 1st batch
+current 5th batch (6th batch) will be removed

@@ -8,8 +8,24 @@
     rotate: 90deg;
 } */
 
-.add_button:focus{
-    /* rotate: 180deg; */
+.add_button, .search_button, .me_button{
+    background: transparent; 
+    height: 30px;
+    border: 2px black solid;
+    border-radius: 100%;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.add_button:focus, .search_button:focus, .me_button:focus{
     outline: none;
-    box-shadow: none;
+    
+}
+
+.add_button:hover, .search_button:hover, .me_button:hover{
+    box-shadow: 0 0 10px #7b2cbf;
+    transform: scale(1.05);
 }
