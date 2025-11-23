@@ -67,7 +67,7 @@ export default function Threads() {
 
     const loadPosts = async () => {
         try {
-            const response = await axiosInstance.get('app/threads/')
+            const response = await axiosInstance.get('app/feed/')
             console.log(response.data)
             setPosts(response.data)
         } catch (err) {
@@ -223,7 +223,12 @@ export default function Threads() {
             {navState == 'createPost' && <CreatePostPanel />}
             {navState == 'searchUser' && <SearchUser />}
             <div className={styles.main}>
-                <PostConstructor obj={posts}/>
+                {posts.length > 0 ? <PostConstructor obj={posts} /> :
+                    <div className={styles.discover}>
+                        <h2>No posts available.</h2>
+                        <a href="/discover/">Discover other users.</a>
+                    </div>
+                }
             </div>
         </div>
 

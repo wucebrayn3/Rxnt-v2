@@ -26,7 +26,6 @@ import BrowserRouter as Router, Routes, Route
 
 
 
-
 NOTE:
 
 need to fix requests, too many requests on load. Fix if possible or maybe it's just a normal web behaviour
@@ -72,3 +71,8 @@ TO ADD:
 6. Like post, comment and reply
 
 7. Account deletion (by user)
+
+8. Floating, top-most followings list 
+                - can be toggled close and open, must be smooth / animated
+                - while closed, should display number of active followed users
+                - will display all followed users

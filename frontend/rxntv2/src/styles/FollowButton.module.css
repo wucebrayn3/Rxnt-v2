@@ -1,0 +1,6 @@
+.follow_btn {
+    cursor: pointer;
+    border: 1px black solid;
+    padding: 5px;
+    border-radius: 10px;
+}

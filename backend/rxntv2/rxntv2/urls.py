@@ -1,7 +1,7 @@
 
 from django.contrib import admin
 from django.urls import path, include
-from api.views import CreateUserView, UserListView, ProfileView, logoutView
+from api.views import CreateUserView, UserListView, ProfileView, ExcludedUserListView,logoutView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView # pre-built views for obtaining and refreshing tokens
 
 urlpatterns = [
@@ -14,4 +14,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),  # Include other API URLs
     path('app/', include('api.urls')),  # Include other API URLs
     path('users/', UserListView.as_view(), name='user-list'),  # Endpoint to list users
+    path('discover/', ExcludedUserListView.as_view(), name='user-list'),  # Endpoint to list users
 ]

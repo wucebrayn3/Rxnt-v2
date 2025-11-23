@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from rest_framework import generics
@@ -9,7 +10,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import UserSerializer, CommentSerializer, PostSerializer, UserProfileSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Post, Comment
+from .models import Post, Comment, Follow
 
 # Create your views here.
 
@@ -47,6 +48,23 @@ class UserListView(generics.ListAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     
+    def get_serializer_context(self):
+        return {'request': self.request}
+    
+    # def get_queryset(self):
+    #     return User.objects.exclude(id=self.request.user.id)
+    
+class ExcludedUserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def get_serializer_context(self):
+        return {'request': self.request}
+    
+    def get_queryset(self):
+        return User.objects.exclude(id=self.request.user.id)
     
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
@@ -147,3 +165,70 @@ class DeleteCommentView(generics.DestroyAPIView):
     def get_queryset(self):
         user = self.request.user
         return Comment.objects.filter(author=user)
+    
+class FollowUser(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request, user_id):
+        target = get_object_or_404(User, id=user_id)
+        
+        if request.user == target:
+            return Response({'error': "You can't follow yourself"}, status=400)
+        
+        follow, created = Follow.objects.get_or_create(
+            follower=request.user,
+            following=target,
+        )
+        
+        if created:
+            return Response({'message':'Followed'})
+        
+        return Response({'message':"Already following"})
+    
+class Unfollow(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    def post(selt, request, user_id):
+        target = get_object_or_404(
+            User,
+            id=user_id,
+        )
+        
+        Follow.objects.filter(
+            follower=request.user,
+            following=target
+        ).delete()
+        
+        return Response({'message':'Unfollowed'})
+    
+class FollowerListView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    
+    def get(self, request, user_id):
+        target = User.objects.get(id=user_id)
+        followers = target.followers.all()
+        users = [i.follower for i in followers]
+        return Response(UserSerializer(users, many=True).data)
+    
+class FollowingListView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    
+    def get(self, request, user_id):
+        target = User.objects.get(id=user_id)
+        following = target.following.all()
+        users = [i.following for i in following]
+        return Response(UserSerializer(users, many=True).data)
+    
+class FilteredFeedView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    
+    def get_queryset(self):
+        user = self.request.user
+        following_ids = user.following.values_list('following', flat=True)
+        return Post.objects.filter(author__in=following_ids).order_by('-created_at')
