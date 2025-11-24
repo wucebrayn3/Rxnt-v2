@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import arrowDown from '../assets/down-arrow.png';
 import axiosInstance from "../axiosInstance";
 
+import Report from "./Report.jsx";
+import FollowedUsersTray from "./FollowedUsersTray.jsx";
 import CommentOptionBtn from "./CommentOption.jsx";
 import SearchUser from "./SearchUser.jsx";
 import CreateComment from "./CreateComment.jsx";
@@ -122,7 +124,10 @@ export default function Threads() {
                     <>
                         <div className={styles.upper_panel}>
                             <Link to={o.author ? `/user/${o.author}` : '#'}><h3>Author: {getUsername(o.author)}</h3></Link>
-                            <p className={styles.date}>{formatDate(o.created_at)}</p>
+                            <div>
+                                <p className={styles.date}>{formatDate(o.created_at)}</p>
+                                <Report id={o.id} author={o.author} username={getUsername(o.author)} title={o.title} content={o.content} type={'post'}/>
+                            </div>
                         </div>
                         <div className={styles.content}>
                             <h4>Title: {o.title}</h4>
@@ -139,7 +144,10 @@ export default function Threads() {
                     <>
                        <div className={styles.upper_panel}>
                             <Link to={o.author ? `/user/${o.author}` : '#'}><h3>Author: {getUsername(o.author)}</h3></Link>
-                            <p style={{fontSize: '0.7rem'}}>{formatDate(o.created_at)}</p>
+                            <div>
+                                <p className={styles.date}>{formatDate(o.created_at)}</p>
+                                <Report id={o.id} author={o.author} username={getUsername(o.author)} title={o.title} content={o.content} type={'post'}/>
+                            </div>
                         </div>
                         <div className={styles.content}>
                             <h4>Title: {o.title}</h4>
@@ -230,6 +238,7 @@ export default function Threads() {
                     </div>
                 }
             </div>
+            <FollowedUsersTray></FollowedUsersTray>
         </div>
 
     )

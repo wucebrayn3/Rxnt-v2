@@ -31,7 +31,8 @@ export default function Header({ onCreatePost, onSearchUser }) {
     border: '2px black solid',
     boxShadow: '0 5px 10px rgba(0,0,0,0.5)',
     transition: "0.2s",
-    color: 'black'
+    color: 'black',
+    zIndex: 100
   };
 
   const fixedStyle = {

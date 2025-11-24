@@ -14,6 +14,6 @@ urlpatterns = [
     path('follow/user/<int:user_id>/', views.FollowUser.as_view(), name='follow'), # For all users
     path('unfollow/user/<int:user_id>/', views.Unfollow.as_view(), name='unfollow'), # For all users
     path('feed/', views.FilteredFeedView.as_view(), name='filtered-feed'), # This is filtered feed, for normal users. Not for admin.
-    path('get/followers/<int:user_id>/', views.FollowerListView.as_view(), name='get-followers'),
-    path('get/following/<int:user_id>/', views.FollowingListView.as_view(), name='get-followings'),
+    path('get/followers/<str:user_id>/', views.FollowerListView.as_view(), name='get-followers'),
+    path('get/following/<str:user_id>/', views.FollowingListView.as_view(), name='get-followings'),
 ]

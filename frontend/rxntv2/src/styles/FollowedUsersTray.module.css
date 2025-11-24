@@ -1,0 +1,45 @@
+.main {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 20px;
+    /* height: 50px; */
+    width: 250px;
+    border: 2px black solid;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: scroll;
+}
+
+.main::-webkit-scrollbar {
+    display: none;
+}
+
+.main, .container {
+    transition: 0.2s;
+}
+
+.header {
+    height: 50px;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    color: black;
+    z-index: 1;
+}
+
+.container {
+    background-color: white;
+    color: black;
+    overflow: scroll;
+}
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+.container::selection {
+    user-select: none;
+}

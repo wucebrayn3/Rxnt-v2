@@ -208,7 +208,7 @@ class FollowerListView(APIView):
     authentication_classes = [JWTAuthentication]
     
     def get(self, request, user_id):
-        target = User.objects.get(id=user_id)
+        target = User.objects.get(username=user_id)
         followers = target.followers.all()
         users = [i.follower for i in followers]
         return Response(UserSerializer(users, many=True).data)
@@ -218,7 +218,7 @@ class FollowingListView(APIView):
     authentication_classes = [JWTAuthentication]
     
     def get(self, request, user_id):
-        target = User.objects.get(id=user_id)
+        target = User.objects.get(username=user_id)
         following = target.following.all()
         users = [i.following for i in following]
         return Response(UserSerializer(users, many=True).data)

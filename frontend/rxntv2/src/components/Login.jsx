@@ -25,7 +25,7 @@ export default function Login() {
                 'api/token/',
                 { username, password }
             );
-
+            console.log(response)
             const tk = response.data.access
             const rf = response.data.refresh
             localStorage.setItem('username', username)
