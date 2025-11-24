@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
 
 import styles from '../styles/Threads.module.css';
@@ -9,6 +9,8 @@ import CommentOptionBtn from "./CommentOption";
 
 export default function UserProfile() {
     
+    const Navigate = useNavigate();
+
     const user = localStorage.getItem('username');
 
     const [userData, setUserData] = useState(null);
@@ -17,14 +19,21 @@ export default function UserProfile() {
     const [allComments, setAllComments] = useState([]);
     const [editTarget, setEditTarget] = useState(null);
 
+    const [isStaff, setIsStaff] = useState(false);
+
     const loadProfile = async () => {
         try {
             const response = await axiosInstance.get('api/me/')
             // const response2 = await axiosInstance.get()
 
+            if (response.data.is_staff) {
+                Navigate('/dashboard')
+                return;
+            }
+
             setComments(response.data.comments)
-            console.log(response.data.comments)
             setUserData(response.data)
+
         } catch (err) {
             console.error('May mali sa profile' + err)
         }

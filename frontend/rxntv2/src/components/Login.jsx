@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
 
 export default function Login() {
@@ -59,18 +59,17 @@ export default function Login() {
 
     return (
         <>
+            <h1>Login</h1>
             <form onSubmit={submit} onChange={handleChange} method="POST">
                 <legend htmlFor='username'>Username</legend>
                 <input type="text" name="username" id="username" />
-
-                <legend htmlFor='email'>Email</legend>
-                <input type="email" name="email" id="email" />
 
                 <legend htmlFor='password'>Password</legend>
                 <input type="password" name="password" id="password" />
 
                 <input type="submit" value="Submit"/>
             </form>
+            <Link to={'/register'}>Don't have an account?</Link>
         </>
     )
 

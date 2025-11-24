@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from .models import Comment, Post, Follow
 from rest_framework import serializers
+# from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class UserSerializer(serializers.ModelSerializer):
     followers_count = serializers.SerializerMethodField()
@@ -58,7 +59,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['id', 'username', 'posts', 'comments'] # need to add 'comments' field
+        fields = ['id', 'username', 'posts', 'comments', 'is_staff'] # need to add 'comments' field
         
     def get_posts(self, obj):
         user_post = Post.objects.filter(author=obj)
