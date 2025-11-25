@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Login from './components/Login';
 import Register from './components/Register';
+import LandingPage from './components/LandingPage';
+import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import Dashboard from './components/Dashboard';
 import Threads from './components/Threads';
 import Profile from './components/Profile';
@@ -15,8 +17,13 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/dashboard" element={<Dashboard />}/>
+          <Route path='/dashboard' element={
+            <ProtectedAdminRoute>
+              <Dashboard />
+            </ProtectedAdminRoute>
+          }/>
 
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/thread" element={<Threads />} />

@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from .models import Comment, Post, Follow
+from .models import Comment, Post, Follow, ReportNonUser, ReportUser, Notification
 from rest_framework import serializers
 # from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -7,10 +7,11 @@ class UserSerializer(serializers.ModelSerializer):
     followers_count = serializers.SerializerMethodField()
     following_count = serializers.SerializerMethodField()
     is_following = serializers.SerializerMethodField()
+    is_staff = serializers.SerializerMethodField()
     
     class Meta:
         model = User
-        fields = ['id', 'username', 'password', 'followers_count', 'following_count', 'is_following']
+        fields = ['id', 'username', 'password', 'followers_count', 'following_count', 'is_following', 'is_staff']
         extra_kwargs = {'password': {'write_only': True}} # Ensure password is write-only and will not be returned in responses
     
     def create(self, validated_data):
@@ -29,6 +30,9 @@ class UserSerializer(serializers.ModelSerializer):
         if not request or request.user.is_anonymous:
             return False
         return Follow.objects.filter(follower=request.user, following=obj).exists()
+    
+    def get_is_staff(self, obj):
+        return obj.is_staff
     
 class PostSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
@@ -71,3 +75,20 @@ class UserProfileSerializer(serializers.ModelSerializer):
         user_comment = Comment.objects.filter(author=obj)
         return CommentSerializer(user_comment, many=True).data
     
+class ReportNonUserSerializer(serializers.ModelSerializer):
+    complainant = serializers.PrimaryKeyRelatedField(read_only=True)
+    
+    class Meta:
+        model = ReportNonUser
+        fields = ['id', 'complainant', 'reported_author', 'reported_object', 'reported_id', 'content', 'title', 'reason', 'report_date']
+    
+class ReportUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportUser
+        fields = ['id', 'complainant', 'user', 'reason', 'report_date']
+        
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = ['id', 'recipient', 'sender', 'created_at', 'is_read']
+        

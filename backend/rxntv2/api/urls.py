@@ -16,4 +16,7 @@ urlpatterns = [
     path('feed/', views.FilteredFeedView.as_view(), name='filtered-feed'), # This is filtered feed, for normal users. Not for admin.
     path('get/followers/<str:user_id>/', views.FollowerListView.as_view(), name='get-followers'),
     path('get/following/<str:user_id>/', views.FollowingListView.as_view(), name='get-followings'),
+    path('dashboard/', views.DashboardVIew.as_view(), name='dashboard'), # endpoint for getting everything
+    path('report/nonuser/', views.ReportNonUserView.as_view(), name='report-nonuser'),
+    path('report/user/', views.ReportUserView.as_view(), name='report-user'),
 ]

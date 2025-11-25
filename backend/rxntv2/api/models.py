@@ -5,6 +5,7 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    edited_at = models.DateTimeField(default=None, null=True, blank=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
@@ -27,6 +28,7 @@ class Comment(models.Model):
     title = models.CharField(max_length=100, null=True, blank=True)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    edited_at = models.DateTimeField(default=None, null=True, blank=True)
     
     def __str__(self):
         return f'{self.author} - {self.content[:20]}'
@@ -56,7 +58,7 @@ class ReportNonUser(models.Model):
     reported_object = models.CharField(max_length=15) # post or comment
     reported_id = models.IntegerField() # post/comment id
     content = models.TextField() # post/comment content
-    title = models.CharField(max_length=100, blank=True, null=True) # applicable for posts as comments have no title
+    title = models.CharField(max_length=100, blank=True, null=True, default="Untitled") # applicable for posts as comments have no title
     reason = models.TextField(max_length=255)
     report_date = models.DateTimeField(auto_now_add=True)
     
@@ -71,3 +73,13 @@ class ReportUser(models.Model):
     
     def __str__(self):
         return f'Reported user: {self.reported_user.username}'
+    
+class Notification(models.Model):
+    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_recipient')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_sender')
+    content = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f'{self.sender.username} notified {self.recipient.username}'

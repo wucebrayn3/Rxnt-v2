@@ -126,7 +126,7 @@ export default function Threads() {
                             <Link to={o.author ? `/user/${o.author}` : '#'}><h3>Author: {getUsername(o.author)}</h3></Link>
                             <div>
                                 <p className={styles.date}>{formatDate(o.created_at)}</p>
-                                <Report id={o.id} author={o.author} username={getUsername(o.author)} title={o.title} content={o.content} type={'post'}/>
+                                <Report item_id={o.id} author={o.author} username={getUsername(o.author)} title={o.title} content={o.content} type={'post'}/>
                             </div>
                         </div>
                         <div className={styles.content}>
@@ -146,7 +146,7 @@ export default function Threads() {
                             <Link to={o.author ? `/user/${o.author}` : '#'}><h3>Author: {getUsername(o.author)}</h3></Link>
                             <div>
                                 <p className={styles.date}>{formatDate(o.created_at)}</p>
-                                <Report id={o.id} author={o.author} username={getUsername(o.author)} title={o.title} content={o.content} type={'post'}/>
+                                <Report item_id={o.id} author={o.author} username={getUsername(o.author)} title={o.title} content={o.content} type={'post'}/>
                             </div>
                         </div>
                         <div className={styles.content}>

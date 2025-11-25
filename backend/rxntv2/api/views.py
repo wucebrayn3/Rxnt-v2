@@ -8,9 +8,9 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from .serializers import UserSerializer, CommentSerializer, PostSerializer, UserProfileSerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Post, Comment, Follow
+from .serializers import UserSerializer, CommentSerializer, PostSerializer, UserProfileSerializer, ReportNonUserSerializer, ReportUserSerializer, NotificationSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
+from .models import Post, Comment, Follow, ReportNonUser, ReportUser, Notification
 
 # Create your views here.
 
@@ -232,3 +232,90 @@ class FilteredFeedView(generics.ListAPIView):
         user = self.request.user
         following_ids = user.following.values_list('following', flat=True)
         return Post.objects.filter(author__in=following_ids).order_by('-created_at')
+    
+class DashboardVIew(APIView): # will get everything
+    permission_classes = [IsAdminUser]
+    authentication_classes = [JWTAuthentication]   
+    
+    def get_users(self):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return serializer.data
+    
+    def get_posts(self):
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        return serializer.data
+    
+    def get_comments(self):
+        comments = Comment.objects.all()
+        serializer = CommentSerializer(comments, many=True)
+        return serializer.data
+    
+    def get_non_user_reports(self):
+        reports = ReportNonUser.objects.all()
+        serializer = ReportNonUserSerializer(reports, many=True)
+        return serializer.data
+    
+    def get(self, request):
+        return Response({
+            'users': self.get_users(),
+            'posts': self.get_posts(),
+            'comments': self.get_comments(),
+            'non_user_reports': self.get_non_user_reports(),
+        })
+        
+class ReportNonUserView(generics.CreateAPIView):
+    queryset = ReportNonUser.objects.all()
+    serializer_class = ReportNonUserSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    
+    def perform_create(self, serializer):
+        serializer.save(complainant=self.request.user)
+        
+class DeleteReportNonUserView(generics.DestroyAPIView):
+    queryset = ReportNonUser.objects.all()
+    serializer_class = ReportNonUserSerializer
+    permission_classes = [IsAdminUser]
+    authentication_classes = [JWTAuthentication]
+    
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return ReportNonUser.objects.all()
+        return ReportNonUser.objects.none()
+    
+class ReportUserView(generics.CreateAPIView):
+    queryset = ReportUser.objects.all()
+    serializer_class = ReportUserSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    
+class DeleteReportUserView(generics.DestroyAPIView):
+    queryset = ReportUser.objects.all()
+    serializer_class = ReportUserSerializer
+    permission_classes = [IsAdminUser]
+    authentication_classes = [JWTAuthentication]
+    
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return ReportUser.objects.all()
+        return ReportUser.objects.none()
+    
+class NotificationView(generics.RetrieveDestroyAPIView):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user)
+
+class CreateNotificationView(generics.CreateAPIView):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAdminUser]
+    authentication_classes = [JWTAuthentication]
+
+    def perform_create(self, serializer):
+        serializer.save()
