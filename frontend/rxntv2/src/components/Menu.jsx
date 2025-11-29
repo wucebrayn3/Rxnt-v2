@@ -11,7 +11,7 @@ export default function Menu () {
 
     const [toggle, setToggle] = useState(false)
 
-    const handleToggle = () => {
+    const handleToggle = (e) => {
         setToggle(t => t ? false : true)
     }
 
@@ -19,7 +19,7 @@ export default function Menu () {
         <div onClick={handleToggle} className={styles.main}>
             <img src={borgir} alt="burger menu" />
             {toggle && 
-                <div className={styles.dropdown}>
+                <div className={styles.dropdown} onClick={e => e.stopPropagation()}>
                     <Logout></Logout>
                 </div>
             }
