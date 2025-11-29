@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import plus from '../assets/plus (1).png';
 import user from '../assets/user.png'
 import search from '../assets/loupe.png'
+import home from '../assets/home.png'
 
 import Logout from "./Logout";
 import { Link } from "react-router-dom";
+import NotificationTray from "./NotificationTray";
+import Menu from "./Menu";
+
 import styles from '../styles/AddButton.module.css'
 
-export default function Header({ onCreatePost, onSearchUser }) {
+export default function Header({ onCreatePost, onSearchUser, isDashboard, users }) {
   const [isFixed, setIsFixed] = useState(false);
 
   useEffect(() => {
@@ -44,6 +48,12 @@ export default function Header({ onCreatePost, onSearchUser }) {
     boxShadow: "0 0 10px rgba(0,0,0,0.75)",
   };
 
+    const getId = (un) => {
+        if (!un || !users || users.length === 0) return 'Unknown';
+        const u = users.find(x => x.username === un);
+        return u ? u.id : 'Unknown';
+    }
+
   return (
     <header
       style={{
@@ -53,20 +63,35 @@ export default function Header({ onCreatePost, onSearchUser }) {
     >
       <h3 style={{position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', margin:'0'}}>You are logged in as: {localStorage.getItem('username')}</h3>
       <div style={{display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'center'}}>
-        <button  onClick={onCreatePost} className={styles.add_button}>
-          <img style={{height: '100%'}} src={plus} alt="" />
-        </button>
-        <button onClick={onSearchUser} className={styles.search_button}>
-          <img style={{height: '100%'}} src={search}></img>
-        </button>  
-        <Link to='/me'>
-          <button  className={styles.me_button}>
-            <img style={{height: '100%'}} src={user}></img>
-          </button>  
-        </Link>
+        { !isDashboard ?
+          <button>asd</button>
+          :
+          <>
+            <button  onClick={onCreatePost} className={styles.add_button}>
+              <img style={{height: '100%'}} src={plus} alt="" />
+            </button>
+
+            <button onClick={onSearchUser} className={styles.search_button}>
+              <img style={{height: '100%'}} src={search}></img>
+            </button>  
+
+            <Link to='/me'>
+              <button  className={styles.me_button}>
+                <img style={{height: '100%'}} src={user}></img>
+              </button>  
+            </Link>
+
+            <Link to='/thread'>
+              <button  className={styles.me_button}>
+                <img style={{height: '100%'}} src={home}></img>
+              </button>  
+            </Link>
+          </>
+        }
       </div>
+      {/* <NotificationTray me={getId(user)}></NotificationTray> */}
       <div style={{position: 'absolute', right: '20px'}}>
-        <Logout></Logout>
+        <Menu></Menu>
       </div>
     </header>
   );

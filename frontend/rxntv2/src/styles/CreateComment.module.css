@@ -7,8 +7,8 @@
     width: 20%;
     min-width: fit-content;
     max-width: 30px;
-    padding: 5px;
-    
+    padding: 7px;
+    border: none;
     color: black;
 }
 

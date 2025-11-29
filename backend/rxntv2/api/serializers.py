@@ -46,6 +46,9 @@ class PostSerializer(serializers.ModelSerializer):
         comments = obj.comments.all()
         return CommentSerializer(comments, many=True).data
     
+    # def update(self, instance, validated_data):
+    #     return super().update(instance, validated_data)
+    
 class CommentSerializer(serializers.ModelSerializer):
     replies = serializers.SerializerMethodField()
     
@@ -88,7 +91,15 @@ class ReportUserSerializer(serializers.ModelSerializer):
         fields = ['id', 'complainant', 'user', 'reason', 'report_date']
         
 class NotificationSerializer(serializers.ModelSerializer):
+    # recipient = serializers.SerializerMethodField()
     class Meta:
         model = Notification
-        fields = ['id', 'recipient', 'sender', 'created_at', 'is_read']
-        
+        fields = ['id',  'recipient',  'sender', 'topic' , 'content', 'created_at', 'is_read']
+
+    # def get_recipient(self, obj):
+    #     user = User.objects.filter(id=obj)
+    #     print(f"yano {obj}")
+    #     print(f"entire model: {Notification.objects.values().all()}")
+    #     return UserSerializer(user).data
+    # def update(self, instance, validated_data):
+    #     return super().update(instance, validated_data)

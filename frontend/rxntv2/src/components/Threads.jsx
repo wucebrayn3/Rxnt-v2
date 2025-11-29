@@ -5,6 +5,7 @@ import axiosInstance from "../axiosInstance";
 
 import Report from "./Report.jsx";
 import FollowedUsersTray from "./FollowedUsersTray.jsx";
+import NotificationTray from "./NotificationTray.jsx";
 import CommentOptionBtn from "./CommentOption.jsx";
 import SearchUser from "./SearchUser.jsx";
 import CreateComment from "./CreateComment.jsx";
@@ -227,7 +228,7 @@ export default function Threads() {
     return (
 
         <div style={{placeItems: 'center'}}>
-           <Header onCreatePost={()=>togglePanel('createPost')} onSearchUser={()=>togglePanel('searchUser')}/>
+           <Header onCreatePost={()=>togglePanel('createPost')} onSearchUser={()=>togglePanel('searchUser')} isDashboard={true} users={users}/>
             {navState == 'createPost' && <CreatePostPanel />}
             {navState == 'searchUser' && <SearchUser />}
             <div className={styles.main}>
@@ -238,7 +239,9 @@ export default function Threads() {
                     </div>
                 }
             </div>
-            <FollowedUsersTray></FollowedUsersTray>
+            <div className={styles.trays}>
+                <FollowedUsersTray></FollowedUsersTray>
+            </div>
         </div>
 
     )

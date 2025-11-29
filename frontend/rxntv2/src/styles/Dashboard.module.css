@@ -1,120 +1,135 @@
-.main {
-    min-height: 100vh;
+.maine_mendoza {
+    position: relative;
+    place-items: center;
+    background-color: #F2F4F7;
     width: 100vw;
+    height: 100vh;
+}
+
+.main {
+    padding: 90px 20px 20px 20px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
+    gap: 20px;
+}
+
+.summary {
+    width: 100%;
+    height: 120px;
+    color: #DE9B9B;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
-    padding: 20px;
-    gap: 20px;
-    background-color: #F2F4F7;
-    color: black;
 }
 
-.overview_panel {
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    height: fit-content;
-    gap: 20px;
-}
-
-.users_panel, .posts_panel, .comments_panel {
-    box-sizing: border-box;
-    border: 1px black solid;
-    height: 100%;
-    flex: 1 1 400px;
-    overflow: scroll;
+.summary_sub_containers {
+    flex: 1;
+    max-width: 20%;
+    height: 90%;
+    border: 1px #dfbebeaa solid;
+    border-radius: 10px;
+    background-color: #dfbebebf;
+    padding: 10px;
     display: flex;
     flex-direction: column;
+    position: relative;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.25);
     box-sizing: border-box;
-    height: 700px;
-    background-color: #FEFEFE;
-    border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-.users_panel::-webkit-scrollbar, 
-.posts_panel::-webkit-scrollbar, 
-.comments_panel::-webkit-scrollbar,
-.reports_panel::-webkit-scrollbar {
+.summary_sub_containers:hover {
+    transform: scale(1.025);
+}
+
+.summary_sub_containers * {
+    margin: 0;
+}
+
+.summary_sub_containers h2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem;
+    filter: drop-shadow(0 3px 1px rgba(0,0,0,0.25));
+}
+
+.summary_overview {
+    width: 100%;
+    height: fit-content;
+    min-height: 100px;
+    max-height: 75%;
+    border: 1px #dfbebeaa solid;
+    border-radius: 10px;
+    overflow: scroll;
+}
+
+.summary_overview::-webkit-scrollbar {
     display: none;
 }
 
-.users_panel,
-.posts_panel,
-.comments_panel,
-.reports_panel {
-    padding: 10px;
-}
-
-.users_panel *,
-.posts_panel *,
-.comments_panel *,
-.reports_panel * {
-    margin: 1px;
-}
-
-.user {
-    display: flex;
+.columns {
     width: 100%;
-    gap: 10px;
-    box-sizing: border-box;
-    transition: 0.2s;
-}
-
-.user:hover {
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    border-radius: 10px;
-}
-
-.user .h4, .user p {
-    flex: 1 1 0;
-    overflow: hidden;
-    position: relative;
-    margin: 0;
-    padding: 2px;
-}
-
-.post, .comment {
-    padding: 2px;
-    gap: 10px;
-    transition: 0.2s;
-}
-
-.post:hover, .comment:hover {
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    border-radius: 10px;
-}
-
-.reports_panel {
-    box-sizing: border-box;
-    width: 100%;
-    height: 500px;
-    border: 1px black solid;
-}
-
-.report {
+    height: 50px;
+    background-color: #DFBEBE;
     display: flex;
-}
-
-.report .report_summary,
-.report .buttons {
-    flex: 1 1 0;
-}
-
-.report .buttons {
-    display: flex;
-    justify-content: center;
     align-items: center;
 }
 
-.report .buttons button {
-    width: 70px;
-    font-size: 0.75rem;
+.labels {
+    flex: 1 1 0;
+    padding-left: 10px;
+}
+
+.default_label {
+    flex: 1 1 0;
     text-align: center;
+}
+
+.user, 
+.post,
+.comment,
+.report {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.user *, 
+.post *,
+.comment * ,
+.report *:not(.buttons) {
+    flex: 1 1 0;
+    color: black;
     padding: 5px;
-    margin: 5px;
+}
+
+.report_summary {
+    display: flex;
+
+}
+
+.report_summary * {
+    flex: 1 1 0;
+}
+
+.buttons {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.buttons .view_btn {
+    background-color: #78cb67;
+}
+
+.buttons .remove_btn {
+    background-color: #ef233c;
 }

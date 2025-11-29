@@ -77,6 +77,7 @@ class ReportUser(models.Model):
 class Notification(models.Model):
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_recipient')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_sender')
+    topic = models.CharField(max_length=50, default='Unnamed Notification')
     content = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)

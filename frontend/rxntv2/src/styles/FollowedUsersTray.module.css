@@ -1,16 +1,12 @@
 .main {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    margin: 20px;
-    /* height: 50px; */
+    height: 50px;
     width: 250px;
-    border: 2px black solid;
     z-index: 100;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     overflow: scroll;
+    border: 1px black solid;
 }
 
 .main::-webkit-scrollbar {

@@ -1,4 +1,6 @@
 .main {
+    /* position: relative;
+    place-items: center; */
     display: flex;
     justify-content: center;
     box-sizing: border-box;
@@ -202,3 +204,12 @@
     transform: scale(1.05);
 }
 
+.trays {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 20px;
+    width: fit-content;
+    border: 2px black solid;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5)
+}

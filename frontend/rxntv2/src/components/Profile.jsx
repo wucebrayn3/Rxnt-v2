@@ -6,6 +6,7 @@ import styles from '../styles/Threads.module.css';
 import arrowDown from '../assets/down-arrow.png';
 import OptionBtn from "./PostOption";
 import CommentOptionBtn from "./CommentOption";
+import Header from "./Header";
 
 export default function UserProfile() {
     
@@ -231,7 +232,6 @@ export default function UserProfile() {
                                         <p>{o.content}</p>
                                     }
                                     {user == getUsername(o.author) ? <CommentOptionBtn objId={o.id} onDeleteComment={loadProfile} onEditComment={edit}/> : false}
-                                    <Hayop buset={o}/>
                                 </div>
                                 <CommentConstructor obj={(o.replies || [])} objId={o.post}/>
                             </>
@@ -246,20 +246,12 @@ export default function UserProfile() {
 
     )
 
-    const Hayop = (buset) => {
-        if (comments.includes(buset)) {
-            console.log(buset)
-        } else {
-            console.log(buset, ' is not included')
-        }
-    }
-
     return (
-        <>
-            <Link to={`/thread`}><button>Back</button></Link>
+        <div style={{placeItems: 'center'}}>
+            <Header isDashboard={true}/>
             <div className={styles.main}>
                 {userData && users && <PostConstructor obj={userData}/>}
             </div>
-        </>
+        </div>
     )
 }

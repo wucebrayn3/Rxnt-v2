@@ -3,8 +3,10 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from rest_framework import generics
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -302,15 +304,16 @@ class DeleteReportUserView(generics.DestroyAPIView):
             return ReportUser.objects.all()
         return ReportUser.objects.none()
     
-class NotificationView(generics.RetrieveDestroyAPIView):
-    queryset = Notification.objects.all()
+class NotificationView(generics.ListAPIView):
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     
     def get_queryset(self):
-        return Notification.objects.filter(user=self.request.user)
-
+        print(f"hala {self.request.user.id}")
+        return Notification.objects.all()
+        # return Notification.objects.filter(recipient=self.request.user.id)
+        
 class CreateNotificationView(generics.CreateAPIView):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
@@ -319,3 +322,21 @@ class CreateNotificationView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save()
+
+class NotificationViewSet(ModelViewSet):
+    serializer_class = NotificationSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self): # Pansariling notifs lng
+        return Notification.objects.filter(recipient=self.request.user)
+
+    def perform_create(self, serializer): # Staff lng makakagawa ng notif
+        if not self.request.user.is_staff:
+            raise PermissionDenied("Only staff can create notifications.")
+        serializer.save()
+
+    def perform_destroy(self, instance): # Yung may-ari lng ng notif makakapag-delete
+        if instance.recipient != self.request.user:
+            raise PermissionDenied("You cannot delete this notification.")
+        instance.delete()

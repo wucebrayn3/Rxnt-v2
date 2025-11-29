@@ -18,5 +18,10 @@ urlpatterns = [
     path('get/following/<str:user_id>/', views.FollowingListView.as_view(), name='get-followings'),
     path('dashboard/', views.DashboardVIew.as_view(), name='dashboard'), # endpoint for getting everything
     path('report/nonuser/', views.ReportNonUserView.as_view(), name='report-nonuser'),
+    path('delete-non-user-report/<int:pk>/', views.DeleteReportNonUserView.as_view(), name='delete-report-non-user'),
     path('report/user/', views.ReportUserView.as_view(), name='report-user'),
+    path('delete-user-report/<int:pk>/', views.DeleteReportUserView.as_view(), name='delete-user-report'),
+    path('notification/send/', views.CreateNotificationView.as_view(), name='send-notification'),
+    path('get/notifications/', views.NotificationView.as_view(), name='get-notification'),
+    path('delete/notification/<int:pk>/', views.NotificationView.as_view(), name='delete-notification')
 ]
