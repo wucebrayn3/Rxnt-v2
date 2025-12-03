@@ -1,0 +1,8 @@
+.main {
+    display: flex;
+    flex-direction: column;
+}
+
+.delete {
+    background-color: #EF233C;
+}

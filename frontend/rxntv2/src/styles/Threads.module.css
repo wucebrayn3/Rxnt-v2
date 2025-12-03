@@ -10,7 +10,7 @@
     flex-direction: column-reverse;
     justify-content: flex-end;
     align-items: center;
-    background-color: #F2F4F7;
+    background-color: #ffffff;
     padding-top: 80px;
 }
 
@@ -27,11 +27,15 @@
     display: flex; 
     align-items: center; 
     justify-content: space-between; 
-    border: 2px #101010 solid;
+    background-color: #fddbdb; 
+    border: 3px #0E0E0E solid;
     border-radius: 15px 15px 0px 0px; 
     padding: 10px; 
-    background-color: #FEFEFE; 
     box-shadow: 0 5px 5px rgba(0,0,0,0.25)
+}
+
+.upper_panel h3 {
+    color: #0E0E0E;
 }
 
 .upper_panel .date{
@@ -43,6 +47,7 @@
     border-radius: 0 0 15px 15px; 
     padding: 10px; 
     background-color: #FEFEFE; 
+    border: 3px #0E0E0E solid;
     box-shadow: 0 5px 5px rgba(0,0,0,0.25);
     display: flex;
     flex-direction: column;
@@ -108,12 +113,18 @@
 
 .comment_item {
     width: fit-content;
-    border: 1px black solid; 
+    border: 2px #0E0E0E solid; 
     background-color: white;
     flex-shrink: 1;
     border-radius: 10px; 
     padding: 10px;
 
+}
+
+.comment_options {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
 
 .post_panel {
@@ -212,4 +223,48 @@
     width: fit-content;
     border: 2px black solid;
     box-shadow: 0 5px 10px rgba(0,0,0,0.5)
+}
+
+.profile_detail {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    box-shadow: 0 7px 7px rgba(0,0,0,0.5);
+}
+
+.profile_detail div {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 0 20px 0 20px;
+    flex: 1 1 0;
+}
+
+.profile_detail div * {
+    margin: 10px;
+}
+
+.username {
+    color: #101010;
+}
+
+.username .report_btn {
+    background-color: #ef233c;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 10px;
+    width: fit-content;
+    height: fit-content;
+}
+
+.follow {
+    color: rgba(10,10,10,0.5);
+}
+
+.follow * {
+    font-weight: 400;
+}
+
+.main_nanaman {
+    place-items: center;
 }

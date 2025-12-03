@@ -123,11 +123,13 @@ class DeletePostView(generics.DestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
     
     def get_queryset(self):
-        user = self.request.user
-        return Post.objects.filter(author=user)
+        if not self.request.user.is_staff:
+            user = self.request.user
+            return Post.objects.filter(author=user)
+        return Post.objects.all()
     
 class EditPostView(generics.UpdateAPIView):
     serializer_class = PostSerializer
@@ -165,8 +167,10 @@ class DeleteCommentView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        user = self.request.user
-        return Comment.objects.filter(author=user)
+        if not self.request.user.is_staff:
+            user = self.request.user
+            return Comment.objects.filter(author=user)
+        return Comment.objects.all()
     
 class FollowUser(APIView):
     authentication_classes = [JWTAuthentication]
@@ -259,12 +263,18 @@ class DashboardVIew(APIView): # will get everything
         serializer = ReportNonUserSerializer(reports, many=True)
         return serializer.data
     
+    def get_user_reports(self):
+        reports = ReportUser.objects.all()
+        serializer = ReportUserSerializer(reports, many=True)
+        return serializer.data
+    
     def get(self, request):
         return Response({
             'users': self.get_users(),
             'posts': self.get_posts(),
             'comments': self.get_comments(),
             'non_user_reports': self.get_non_user_reports(),
+            'user_reports': self.get_user_reports(),
         })
         
 class ReportNonUserView(generics.CreateAPIView):
@@ -292,6 +302,9 @@ class ReportUserView(generics.CreateAPIView):
     serializer_class = ReportUserSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
+    
+    def perform_create(self, serializer):
+        serializer.save(complainant=self.request.user)
     
 class DeleteReportUserView(generics.DestroyAPIView):
     queryset = ReportUser.objects.all()
@@ -334,9 +347,14 @@ class NotificationViewSet(ModelViewSet):
     def perform_create(self, serializer): # Staff lng makakagawa ng notif
         if not self.request.user.is_staff:
             raise PermissionDenied("Only staff can create notifications.")
-        serializer.save()
+        serializer.save(sender=self.request.user)
 
     def perform_destroy(self, instance): # Yung may-ari lng ng notif makakapag-delete
         if instance.recipient != self.request.user:
             raise PermissionDenied("You cannot delete this notification.")
         instance.delete()
+
+    def perform_update(self, serializer):
+        if serializer.instance.recipient != self.request.user:
+            raise PermissionDenied("Nope, no update for you mi amigo")
+        serializer.save()

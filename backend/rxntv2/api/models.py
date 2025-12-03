@@ -67,8 +67,9 @@ class ReportNonUser(models.Model):
     
 class ReportUser(models.Model):
     complainant = models.ForeignKey(User, on_delete=models.CASCADE) # who reported
-    reported_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_user') # who is being reported
+    reported_author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_user') # who is being reported
     reason = models.TextField(max_length=255)
+    reported_object = models.CharField(max_length=4, default='User')
     report_date = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):

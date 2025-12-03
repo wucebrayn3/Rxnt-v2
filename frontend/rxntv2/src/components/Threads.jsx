@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import arrowDown from '../assets/down-arrow.png';
 import axiosInstance from "../axiosInstance";
 
 import Report from "./Report.jsx";
 import FollowedUsersTray from "./FollowedUsersTray.jsx";
-import NotificationTray from "./NotificationTray.jsx";
 import CommentOptionBtn from "./CommentOption.jsx";
 import SearchUser from "./SearchUser.jsx";
 import CreateComment from "./CreateComment.jsx";
@@ -22,7 +20,7 @@ export default function Threads() {
     const [navState, setNavState] = useState(null);
     const [posts, setPosts] = useState([]);
     const [comments, setComments] = useState([]);
-    const [parenComment, setParentComments] = useState([]);
+    const [parentComment, setParentComments] = useState([]);
     const [users, setUsers] = useState([]);
     const [editTarget, setEditTarget] = useState(null);
 
@@ -135,10 +133,9 @@ export default function Threads() {
                             <p>{o.content}</p>
                             <div className={styles.comment_container}>
                                 <h4>Comments:</h4>
-                                <CreateComment postId={o.id}/>
+                                <CreateComment postId={o.id} reload={() => {loadComments();}}/>
                                 <CommentConstructor obj={(o.comments || []).filter(c => c.parent == null)} objId={o.id}/>
                             </div>
-                            <img style={{height: '20px'}} src={arrowDown} alt="" />
                         </div>
                     </>
                     :
@@ -155,7 +152,7 @@ export default function Threads() {
                             <p>{o.content}</p>
                             <div className={styles.comment_container}>
                                 <h4>Comments:</h4>
-                                <CreateComment postId={o.id} />
+                                <CreateComment postId={o.id} reload={() => {loadComments();}}/>
                             </div>
                         </div>
                     </> 
@@ -186,8 +183,11 @@ export default function Threads() {
                                         : 
                                         <p>{o.content}</p>
                                     }
+                                    <div className={styles.comment_options}>
                                     {user == getUsername(o.author) ? <CommentOptionBtn objId={o.id} onDeleteComment={loadUsers} onEditComment={edit}/> : false}
-                                    <CreateReply postId={objId} parent={o.id}></CreateReply>
+                                        <CreateReply postId={objId} parent={o.id}></CreateReply>
+                                        <Report item_id={o.id} author={o.author} username={getUsername(o.author)} title={o.title} content={o.content} type={'comment'}/>
+                                    </div>
                                 </div>
                                 <CommentConstructor obj={(o.replies || [])} objId={o.post}/>
                             </>
@@ -209,8 +209,11 @@ export default function Threads() {
                                         : 
                                         <p>{o.content}</p>
                                     }
-                                    {user == getUsername(o.author) ? <CommentOptionBtn objId={o.id} onDeleteComment={loadUsers} onEditComment={edit}/> : false}
-                                    <CreateReply postId={objId} parent={o.id}></CreateReply>
+                                    <div className={styles.comment_options}>
+                                        {user == getUsername(o.author) ? <CommentOptionBtn objId={o.id} onDeleteComment={loadUsers} onEditComment={edit}/> : false}
+                                        <CreateReply postId={objId} parent={o.id}></CreateReply>
+                                        <Report item_id={o.id} author={o.author} username={getUsername(o.author)} title={o.title} content={o.content} type={'comment'}/>
+                                    </div>
                                 </div>
                                 <CommentConstructor obj={(o.replies || [])} objId={o.post}/>
                             </>
@@ -228,7 +231,7 @@ export default function Threads() {
     return (
 
         <div style={{placeItems: 'center'}}>
-           <Header onCreatePost={()=>togglePanel('createPost')} onSearchUser={()=>togglePanel('searchUser')} isDashboard={true} users={users}/>
+           <Header onCreatePost={()=>togglePanel('createPost')} onSearchUser={()=>togglePanel('searchUser')} users={users}/>
             {navState == 'createPost' && <CreatePostPanel />}
             {navState == 'searchUser' && <SearchUser />}
             <div className={styles.main}>

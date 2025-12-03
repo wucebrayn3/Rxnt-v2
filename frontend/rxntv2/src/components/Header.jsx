@@ -11,7 +11,7 @@ import Menu from "./Menu";
 
 import styles from '../styles/AddButton.module.css'
 
-export default function Header({ onCreatePost, onSearchUser, isDashboard, users }) {
+export default function Header({ onCreatePost, onSearchUser, users }) {
   const [isFixed, setIsFixed] = useState(false);
 
   useEffect(() => {
@@ -63,10 +63,7 @@ export default function Header({ onCreatePost, onSearchUser, isDashboard, users 
     >
       <h3 style={{position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', margin:'0'}}>You are logged in as: {localStorage.getItem('username')}</h3>
       <div style={{display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'center'}}>
-        { !isDashboard ?
-          <button>asd</button>
-          :
-          <>
+        
             <button  onClick={onCreatePost} className={styles.add_button}>
               <img style={{height: '100%'}} src={plus} alt="" />
             </button>
@@ -86,11 +83,11 @@ export default function Header({ onCreatePost, onSearchUser, isDashboard, users 
                 <img style={{height: '100%'}} src={home}></img>
               </button>  
             </Link>
-          </>
-        }
+        
       </div>
       {/* <NotificationTray me={getId(user)}></NotificationTray> */}
-      <div style={{position: 'absolute', right: '20px'}}>
+      <div style={{position: 'absolute', right: '20px', display: 'flex', gap: '10px'}}>
+        <NotificationTray></NotificationTray>
         <Menu></Menu>
       </div>
     </header>

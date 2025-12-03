@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
 
+import styles from '../styles/Login.module.css';
+
 export default function Login() {
 
     const [username, setUserName] = useState("")
@@ -58,19 +60,29 @@ export default function Login() {
     }
 
     return (
-        <>
-            <h1>Login</h1>
-            <form onSubmit={submit} onChange={handleChange} method="POST">
-                <legend htmlFor='username'>Username</legend>
-                <input type="text" name="username" id="username" />
+        <div className={styles.main}>
+            <div className={styles.login_panel}>
+                <div className={styles.login_container}>
+                    <div className={styles.login_h1}>
+                        <h1>Login</h1>
+                    </div>
+                    <div className={styles.form_itself}> 
+                        <form onSubmit={submit} onChange={handleChange} method="POST">
+                            <legend htmlFor='username'>Username</legend>
+                            <input type="text" name="username" id="username" />
 
-                <legend htmlFor='password'>Password</legend>
-                <input type="password" name="password" id="password" />
+                            <legend htmlFor='password'>Password</legend>
+                            <input type="password" name="password" id="password"/>
 
-                <input type="submit" value="Submit"/>
-            </form>
-            <Link to={'/register'}>Don't have an account?</Link>
-        </>
+                            <input type="submit" value="Submit"/>
+                        </form>
+                    </div>
+                    <div className={styles.register_link}>
+                        <Link to={'/register'}><h5>Don't have an account?</h5></Link>
+                    </div>
+                </div>
+            </div>
+        </div>
     )
 
 }

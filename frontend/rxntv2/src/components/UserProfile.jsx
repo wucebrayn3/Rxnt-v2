@@ -5,52 +5,65 @@ import axiosInstance from "../axiosInstance"
 import styles from '../styles/Threads.module.css'
 import arrowDown from '../assets/down-arrow.png'
 
+import Report from "./Report";
+import FollowButton from "./FollowButton";
+import Header from "./Header";
+
 export default function UserProfile() {
     
+    const [toggle, setToggle] = useState(false);
     const [userData, setUserData] = useState(null);
     const [users, setUsers] = useState([]);
     const [comments, setComments] = useState([]);
     const [allComments, setAllComments] = useState([]);
+    const [profData, setProfData] = useState(null);
     const { id } = useParams();
+
+
+    const loadFollow = async () => {
+        try {
+            const response = await axiosInstance.get('discover/');
+            console.log(response.data.filter(rd => rd.id == id)[0]);
+            setProfData(response.data.filter(rd => rd.id == id)[0]);
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     const loadProfile = async () => {
         try {
-            const response = await axiosInstance.get(`app/user/${id}`)
-
-            console.log(response)
-            setUserData(response.data)
+            const response = await axiosInstance.get(`app/user/${id}`);
+            setUserData(response.data);
         } catch (err) {
-            console.error('May mali sa profile' + err)
-        }
-    }
+            console.error('May mali sa profile' + err);
+        };
+    };
     
     useEffect(() => {
         loadUsers();
         loadProfile();
         loadComments();
-    },[])
+        loadFollow();
+    },[]);
 
     const loadUsers = async () => {
             try {
-                const response = await axiosInstance.get('users/')
-                console.log(response.data)
-                setUsers(response.data)
+                const response = await axiosInstance.get('users/');
+                setUsers(response.data);
             } catch (err) {
-                console.error('May nagkamali sa pagkuha ng user tol: ', err)
-            }
-            console.log('loadUsers called')
+                console.error('May nagkamali sa pagkuha ng user tol: ', err);
+            };
         };
 
     const loadComments = async () => {
         try {
-            const response = await axiosInstance.get('app/comments/')
-            console.log((response.data).filter(data => data.parent != null))
-            setAllComments((response.data))
-            setComments((response.data).filter(data => data.parent == null))
+            const response = await axiosInstance.get('app/comments/');
+            setAllComments((response.data));
+            setComments((response.data).filter(data => data.parent == null));
         } catch (err) {
-            console.error('May mali sa pagkuha ng comments pare ko: ', err)
-        }
-    }
+            console.error('May mali sa pagkuha ng comments pare ko: ', err);
+        };
+    };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -65,14 +78,12 @@ export default function UserProfile() {
         });
     };
 
-    // helper: safely get username by id
     const getUsername = (userId) => {
         if (!userId || !users || users.length === 0) return 'Unknown';
         const u = users.find(x => x.id === userId);
         return u ? u.username : 'Unknown';
     }
 
-    // helper: safely get parent comment's author id
     const getParentAuthorId = (parentId) => {
         if (!parentId || !allComments || allComments.length === 0) return null;
         const pc = allComments.find(c => c.id === parentId);
@@ -156,12 +167,34 @@ export default function UserProfile() {
 
     )
 
+    const reload = () => {
+        loadFollow();
+    }
+
+    const handleReport = () => {
+        setToggle(t => t ? false : true);
+    };
+
     return (
-        <>
-            <Link to={`/thread`}><button>Back</button></Link>
+        <div className={styles.main_nanaman}>
+            <Header  onCreatePost={()=>togglePanel('createPost')} onSearchUser={()=>togglePanel('searchUser')} users={users}/>
             <div className={styles.main}>
+                {toggle && <Report type={'user'} username={getUsername(Number(id))} item_id={Number(id)} close={handleReport}></Report>}
                 {userData && users && <PostConstructor obj={userData}/>}
+                {profData && 
+                    <div className={styles.profile_detail}>
+                        <div className={styles.username}>
+                            <h1>{profData.username}</h1>
+                            <FollowButton is_following_user={profData.is_following} id={id} onBtnClick={reload}/>
+                            <button className={styles.report_btn} onClick={handleReport}>Report User</button>
+                        </div>
+                        <div className={styles.follow}>
+                            <h3>Followers: {profData.followers_count}</h3>
+                            <h3>Following: {profData.following_count}</h3>
+                        </div>
+                    </div>
+                }
             </div>
-        </>
+        </div>
     )
 }

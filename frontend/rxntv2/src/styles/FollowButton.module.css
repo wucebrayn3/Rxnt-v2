@@ -3,4 +3,6 @@
     border: 1px black solid;
     padding: 5px;
     border-radius: 10px;
+    width: fit-content;
+    height: fit-content;
 }

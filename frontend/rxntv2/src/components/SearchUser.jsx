@@ -12,12 +12,10 @@ export default function SearchUser () {
     const loadUsers = async () => {
         try {
             const response = await axiosInstance.get('users/')
-            console.log(response.data)
             setUsers(response.data)
         } catch (err) {
             console.error('May nagkamali sa pagkuha ng user tol: ', err)
         }
-        console.log('loadUsers called')
     };
 
     useEffect(()=>{
@@ -26,7 +24,6 @@ export default function SearchUser () {
 
     useEffect(()=>{
         query != '' ? setUsersWith(users.filter(u=>u.username.includes(query))) : false
-        console.log(query != '' ?users.filter(u=>u.username.startsWith(query)) : false)
     }, [query])
 
     return (

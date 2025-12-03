@@ -1,0 +1,86 @@
+* {
+    box-sizing: border-box;
+}
+
+.main {
+    display: flex;
+    justify-content: flex-end;
+    height: 100vh;
+    width: 100vw;
+    color: black;
+}
+
+.register_panel {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+
+.register_container {
+    border: 1px black solid;
+    border-radius: 10px;
+    width: 60%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #DFBEBE;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    overflow-y: auto;
+}
+
+.register_container::-webkit-scrollbar {
+    width: 7px;
+}
+
+.register_container::-webkit-scrollbar-track{
+    background: rgba(0,0,0,0.05);
+    margin: 5px;
+    border-radius: 10px;
+}
+
+.register_container::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 10px;
+    margin: 5px;
+}
+.register_container div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.register_container .h1 h1 {
+    margin: 10px;
+    font-size: 2rem;
+}
+
+.register_container .h1{
+    flex: 1 1 0;
+}
+
+.register_container .form_itself {
+    flex: 3 3 0;
+}
+
+.register_container .form_itself input{
+    border: 1px black solid;
+    border-radius: 5px;
+}
+
+.register_container .form_itself input[type='submit'] {
+    margin: 0;
+}
+
+.register_container .login_link{
+    margin: 0;
+}
+
+.register_container .login_link h5{
+    color: black;
+}

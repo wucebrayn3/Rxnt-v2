@@ -1,6 +1,49 @@
 .main {
-    width: 25px;
-    height: 25px;
+    position: relative;
+    width: 30px;
+    height: 30px;
     border: 2px black solid;
     border-radius: 100px;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+.main img {
+    width: 100%;
+}
+
+.notifications {
+    position: absolute;
+    box-sizing: border-box  ;
+    display: flex;
+    flex-direction: column;
+    top: 100%;
+    right: 0;
+    width: 250px;
+    min-height: fit-content;
+    max-height: 70vh;
+    padding: 10px;
+    background-color: #FEFEFE;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    border-radius: 10px;
+}
+
+.notif {
+    border-radius: 5px;
+    padding: 5px;
+    transition: 0.2s;
+}
+
+.notif:hover {
+    transform: scale(1.025);
+    background-color: #E0E0E0;
+}
+
+.notif * {
+    margin: 0;
+}
+
+.close {
+    background-color: #E0E0E0;
+    color: black;
 }

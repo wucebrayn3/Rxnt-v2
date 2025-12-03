@@ -17,7 +17,6 @@ export default function CommentOptionBtn ({ objId, onDeleteComment, onEditCommen
 
     const deleteComment = async () => {
         try {
-            console.log('Delete', objId)
             const response = await axiosInstance.delete(`app/delete-comment/${objId}/`)
             onDeleteComment();
         } catch (err) {
@@ -26,7 +25,6 @@ export default function CommentOptionBtn ({ objId, onDeleteComment, onEditCommen
     };
     
     const editComment = () => {
-        console.log('Edit clicked', objId)
         onEditComment(objId);
     };
 
@@ -37,8 +35,8 @@ export default function CommentOptionBtn ({ objId, onDeleteComment, onEditCommen
 
     return (
         <div className={styles.main}>
-            <h5 className={styles.edittt} onClick={editComment}>Edit</h5>
-            <h5 className={styles.deleteee} onClick={confirm}>Delete</h5>
+            <h6 className={styles.edittt} onClick={editComment}>Edit</h6>
+            <h6 className={styles.deleteee} onClick={confirm}>Delete</h6>
             {
                 confirmDelete ?
                     <div className={styles.confirm}>

@@ -2,6 +2,8 @@ import axiosInstance from "../axiosInstance";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import styles from '../styles/Register.module.css';
+
 export default function Register() {
 
     const Navigate = useNavigate();
@@ -26,20 +28,30 @@ export default function Register() {
     }
 
     return (
-        <div>
-            <h1>Register</h1>
-            <form onSubmit={handleSubmit}>
-                <legend htmlFor='username'>Username</legend>
-                <input onChange={(e) => setUsername(e.target.value)} type="text" name="username" id="username" />
+        <div className={styles.main}>
+            <div className={styles.register_panel}>
+                <div className={styles.register_container}>
+                    <div className={styles.h1}>
+                        <h1>Register</h1>
+                    </div>
+                    <div className={styles.form_itself}>
+                        <form onSubmit={handleSubmit}>
+                            <legend htmlFor='username'>Username</legend>
+                            <input onChange={(e) => setUsername(e.target.value)} type="text" name="username" id="username" />
 
-                <legend htmlFor='password'>Password</legend>
-                <input onChange={(e) => setPassword(e.target.value)} type="password" name="password" id="password" />
+                            <legend htmlFor='password'>Password</legend>
+                            <input onChange={(e) => setPassword(e.target.value)} type="password" name="password" id="password" />
 
-                <input type="submit" value="Submit"/>
-            </form>
-            <p>Tip: Don't use your real name</p>
-            <p>Please be polite and cautious when choosing usernames, do not use offensive names.</p>
-            <Link to={'/login'}>Already have an account?</Link>
+                            <input type="submit" value="Submit"/>
+                        </form>
+                    </div>
+                    <div className={styles.login_link}>
+                        <p>Tip: Don't use your real name</p>
+                        <p>Please be polite and cautious when choosing usernames, do not use offensive names.</p>
+                        <Link to={'/login'}><h5>Already have an account?</h5></Link>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 

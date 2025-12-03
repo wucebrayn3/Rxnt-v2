@@ -88,14 +88,15 @@ class ReportNonUserSerializer(serializers.ModelSerializer):
 class ReportUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportUser
-        fields = ['id', 'complainant', 'user', 'reason', 'report_date']
+        fields = ['id', 'complainant', 'reason', 'report_date', 'reported_author', 'reported_object']
+        read_only_fields = ['complainant', 'reported_object']
         
 class NotificationSerializer(serializers.ModelSerializer):
     # recipient = serializers.SerializerMethodField()
     class Meta:
         model = Notification
         fields = ['id',  'recipient',  'sender', 'topic' , 'content', 'created_at', 'is_read']
-
+        read_only_fields = ['sender', 'created_at']
     # def get_recipient(self, obj):
     #     user = User.objects.filter(id=obj)
     #     print(f"yano {obj}")

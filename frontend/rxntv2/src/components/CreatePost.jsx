@@ -13,21 +13,12 @@ export default function CreatePostPanel () {
             const response = await axiosInstance.post('/app/create-post/',
                 {title, content}
             )
-
-            console.log('Nagawa na ang post aking kaibigang madilim: '+response);
             setTitle('');
             setContent('');
         } catch (err) {
             console.error('Error sa createpost: ' + err)
         }
     }
-
-    useEffect(()=>{
-        console.log(title)
-    }, [title])
-    useEffect(()=>{
-        console.log(content)
-    }, [content])
 
     return (
         <div className={styles.post_panel}>

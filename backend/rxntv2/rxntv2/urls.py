@@ -1,9 +1,12 @@
 
 from django.contrib import admin
 from django.urls import path, include
-from api.views import CreateUserView, UserListView, ProfileView, ExcludedUserListView,logoutView
+from api.views import CreateUserView, UserListView, ProfileView, ExcludedUserListView,logoutView, NotificationViewSet
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView # pre-built views for obtaining and refreshing tokens
+from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
+router.register(r'notifications', NotificationViewSet, basename='notifications')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('logout/', logoutView, name='logout'),
@@ -15,4 +18,7 @@ urlpatterns = [
     path('app/', include('api.urls')),  # Include other API URLs
     path('users/', UserListView.as_view(), name='user-list'),  # Endpoint to list users
     path('discover/', ExcludedUserListView.as_view(), name='user-list'),  # Endpoint to list users
+    
+    # bwisit 'to
+    path('app/', include(router.urls)),
 ]

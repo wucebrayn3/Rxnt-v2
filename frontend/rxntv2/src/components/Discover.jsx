@@ -20,6 +20,15 @@ export default function Discover () {
         }
     }
 
+    const loadFollow = async () => {
+        try {
+            const response = await axiosInstance.get('discovery/')
+            console.log(response.data)
+        } catch (err) {
+            console.error(ee)
+        }
+    }
+
     const reload = () => {
         loadUsers();
     }

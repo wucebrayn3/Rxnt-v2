@@ -7,6 +7,8 @@ import arrowDown from '../assets/down-arrow.png';
 import OptionBtn from "./PostOption";
 import CommentOptionBtn from "./CommentOption";
 import Header from "./Header";
+import CreatePostPanel from "./CreatePost";
+import SearchUser from "./SearchUser";
 
 export default function UserProfile() {
     
@@ -19,6 +21,7 @@ export default function UserProfile() {
     const [comments, setComments] = useState([]);
     const [allComments, setAllComments] = useState([]);
     const [editTarget, setEditTarget] = useState(null);
+    const [navState, setNavState] = useState(null);
 
     const [isStaff, setIsStaff] = useState(false);
 
@@ -246,10 +249,17 @@ export default function UserProfile() {
 
     )
 
+    const togglePanel = (panel) => {
+        setNavState(prev => prev === panel ? null : panel)
+    };
+
     return (
         <div style={{placeItems: 'center'}}>
-            <Header isDashboard={true}/>
+            <Header  onCreatePost={()=>togglePanel('createPost')} onSearchUser={()=>togglePanel('searchUser')} users={users}/>
+            {navState == 'createPost' && <CreatePostPanel />}
+            {navState == 'searchUser' && <SearchUser />}
             <div className={styles.main}>
+                
                 {userData && users && <PostConstructor obj={userData}/>}
             </div>
         </div>
