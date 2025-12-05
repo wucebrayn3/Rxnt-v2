@@ -1,7 +1,5 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-from django.contrib.auth import logout
 from rest_framework import generics
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
@@ -14,14 +12,23 @@ from .serializers import UserSerializer, CommentSerializer, PostSerializer, User
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from .models import Post, Comment, Follow, ReportNonUser, ReportUser, Notification
 
-# Create your views here.
 
-#CBV for User Registration
-
-class CreateUserView(generics.CreateAPIView): # will automatically handle createing a new user or new object
-    queryset = User.objects.all() # the list of all the differet objects, to avoid duplication
-    serializer_class = UserSerializer # tells what data is needed to accept to make a new user (username, password)
-    permission_classes = [AllowAny]  # Allow anyone to access this view for registration
+class CreateUserView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+    
+# class BanUserView(APIView):
+#     permission_classes = [IsAdminUser]
+    
+#     def post(self, request, pk):
+#         try:
+#             user = User.objects.get(pk=pk)
+#         except User.DoesNotExist:
+#             return Response({'message': 'User not found'}, status=404)
+        
+#         user.is_active = False
+#         user.save()            
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

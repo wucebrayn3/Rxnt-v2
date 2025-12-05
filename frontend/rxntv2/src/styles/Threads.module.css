@@ -10,14 +10,13 @@
     flex-direction: column-reverse;
     justify-content: flex-end;
     align-items: center;
-    background-color: #ffffff;
     padding-top: 80px;
 }
 
 .post_container {
     margin: 20px; 
-    width: 50%; 
-    color: #212529; 
+    width: 50%;
+    max-width: 600px; 
     gap: 10px; 
     display: flex; 
     flex-direction: column;
@@ -27,15 +26,9 @@
     display: flex; 
     align-items: center; 
     justify-content: space-between; 
-    background-color: #fddbdb; 
-    border: 3px #0E0E0E solid;
+    border: 3px solid;
     border-radius: 15px 15px 0px 0px; 
     padding: 10px; 
-    box-shadow: 0 5px 5px rgba(0,0,0,0.25)
-}
-
-.upper_panel h3 {
-    color: #0E0E0E;
 }
 
 .upper_panel .date{
@@ -46,9 +39,7 @@
     border: 2px #101010 solid; 
     border-radius: 0 0 15px 15px; 
     padding: 10px; 
-    background-color: #FEFEFE; 
-    border: 3px #0E0E0E solid;
-    box-shadow: 0 5px 5px rgba(0,0,0,0.25);
+    border: 3px solid;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -86,9 +77,8 @@
     border-radius: 10px;
     width: 100%;
     height: fit-content;
-    max-height: 500px;
+    max-height: 400px;
     overflow: scroll;
-    background-color: #F0F2F5;
     padding: 10px;
     box-shadow: inset 0 5px 7.5px rgba(0,0,0,0.25);
     gap: 40px;
@@ -144,6 +134,29 @@
     -webkit-backdrop-filter: blur(10px);
 }
 
+.result_container {
+    min-height: 0;
+    max-height: 200px;
+    overflow-y: scroll;
+    /* height: 30vh; */
+}
+
+.result_container::-webkit-scrollbar {
+    width: 7px;
+}
+
+.result_container::-webkit-scrollbar-track{
+    background: rgba(0,0,0,0.05);
+    margin: 5px;
+    border-radius: 10px;
+}
+
+.result_container::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 10px;
+    margin: 5px;
+}
+
 .post_panel h2 {
     margin: 0;
 }
@@ -155,13 +168,21 @@
 .post_panel form{
     display: flex;
     flex-direction: column;
+    align-items: start;
+    width: 100%;
     gap: 10px;
 }
 
-.post_panel input, .post_panel form textarea, .content input, .content textarea {
+.post_panel form input, .post_panel form textarea, .content input, .content textarea {
     color: black;
     border: 2px black solid;
-    border-radius: 10px;
+    border-radius: 5px;
+    width: 100%;
+    margin: 0;
+}
+
+.post_panel form input[type='text'] {
+    border: 2px black solid;
 }
 
 .post_panel form input[type='submit'] {
@@ -222,7 +243,9 @@
     margin: 20px;
     width: fit-content;
     border: 2px black solid;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.5)
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    overflow: hidden;
 }
 
 .profile_detail {

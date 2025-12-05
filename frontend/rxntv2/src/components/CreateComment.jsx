@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import axiosInstance from "../axiosInstance";
-import styles from '../styles/CreateComment.module.css'
+import styles from '../styles/CreateComment.module.css';
 
 export default function CreateComment({ postId, parent, reload }) {
-    const [query, setQuery] = useState('')
+    const [query, setQuery] = useState('');
 
     const createComment = async (e) => {
         e.preventDefault()
@@ -20,7 +20,7 @@ export default function CreateComment({ postId, parent, reload }) {
         } catch (err) {
             console.error('Mali sa pag gawa ng comment mah dude: ', err)
         }
-    }
+    };
 
     return (
         <div className={styles.main}>

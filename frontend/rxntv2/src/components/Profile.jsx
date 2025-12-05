@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../axiosInstance";
+import { useTheme } from "../utils/ThemeContext";
 
 import styles from '../styles/Threads.module.css';
 import arrowDown from '../assets/down-arrow.png';
@@ -12,6 +13,8 @@ import SearchUser from "./SearchUser";
 
 export default function UserProfile() {
     
+    const {fontColor, shadow, bg2, bg3, mode, color} = useTheme();
+
     const Navigate = useNavigate();
 
     const user = localStorage.getItem('username');
@@ -132,16 +135,16 @@ export default function UserProfile() {
 
     const PostConstructor = ({ obj }) => (
         ((obj && obj['posts']) || []).map((o) => (
-            <div key={o.id} className={styles.post_container}>
+            <div key={o.id} className={styles.post_container} style={{color: fontColor}}>
                 {
                     (o.comments || []).length > 0 ?
                     <>
-                        <div className={styles.upper_panel}>
+                        <div className={styles.upper_panel} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: color}}>
                             <Link to={o.author ? `/user/${o.author}` : '#'}><h3>Author: {getUsername(o.author)}</h3></Link>
                             <p className={styles.date}>{formatDate(o.created_at)}</p>
                             <OptionBtn objId={o.id} onDeletePost={loadProfile} onEditPost={edit}/>
                         </div>
-                        <div className={styles.content}>
+                        <div className={styles.content} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: bg3}}>
                             {editTarget == o.id ? 
                             <form action="" onReset={cancelEdit} onSubmit={saveEdit}>
                                 <input type="text" defaultValue={o.title}></input>
@@ -155,21 +158,20 @@ export default function UserProfile() {
                                 <p>{o.content}</p>
                             </>
                             }
-                            <div className={styles.comment_container}>
+                            <div className={styles.comment_container} style={{backgroundColor: bg2}}>
                                 <h4>Comments:</h4>
                                 <CommentConstructor obj={(o.comments || []).filter(c => c.parent == null)} objId={o.id}/>
                             </div>
-                            <img style={{height: '20px'}} src={arrowDown} alt="" />
                         </div>
                     </>
                     :
                     <>
-                       <div className={styles.upper_panel}>
+                       <div className={styles.upper_panel} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: color}}>
                             <Link to={o.author ? `/user/${o.author}` : '#'}><h3>Author: {getUsername(o.author)}</h3></Link>
                             <p style={{fontSize: '0.7rem'}}>{formatDate(o.created_at)}</p>
                             <OptionBtn objId={o.id} onDeletePost={loadProfile} onEditPost={edit}/>
                         </div>
-                        <div className={styles.content}>
+                        <div className={styles.content} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: bg3}}>
                             {editTarget == o.id ? 
                             <form action="" onSubmit={saveEdit} onReset={cancelEdit}>
                                 <input type="text" defaultValue={o.title}></input>
@@ -201,7 +203,7 @@ export default function UserProfile() {
                             
                             o.parent == null && o.post === objId ?
                             <>
-                                <div className={styles.comment_item}>
+                                <div className={styles.comment_item} style={{border: 'none', boxShadow: `0 2px 2px ${shadow}`, backgroundColor: mode}}>
                                     <Link to={o.author ? `/user/${o.author}` : '#'}><h3>{getUsername(o.author)}</h3></Link>
                                     {editTarget ? 
                                         <form action="" onReset={cancelEdit} onSubmit={e => {e.preventDefault(); saveComment(e)}} onChange={e => console.log(e.target.value)}>
@@ -219,7 +221,7 @@ export default function UserProfile() {
                             :
                             o.parent != null && o.post === objId ?
                             <>
-                                <div className={styles.comment_item}>
+                                <div className={styles.comment_item} style={{border: 'none', boxShadow: `0 2px 2px ${shadow}`, backgroundColor: mode}}>
                                     <h3>
                                         <Link to={o.author ? `/user/${o.author}` : '#'}>{getUsername(o.author)}</Link>
                                         {' '}replied to{' '}
@@ -254,7 +256,7 @@ export default function UserProfile() {
     };
 
     return (
-        <div style={{placeItems: 'center'}}>
+        <div style={{placeItems: 'center', backgroundColor: mode}}>
             <Header  onCreatePost={()=>togglePanel('createPost')} onSearchUser={()=>togglePanel('searchUser')} users={users}/>
             {navState == 'createPost' && <CreatePostPanel />}
             {navState == 'searchUser' && <SearchUser />}

@@ -6,13 +6,11 @@
     width: 100vw;
     height: 100vh;
     display: flex;
-    color: black;
 }
 
 .login_panel {
     width: 50%;
     height: 100%;
-    background-color: #FFFFFF;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,8 +25,6 @@
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-color: #DFBEBE;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
 }
 
 .login_container h1 {
@@ -53,7 +49,6 @@
 }
 
 .login_container .register_link h5 {
-    color: black;
     transition: 0.2s;
     text-decoration: underline;
     text-underline-offset: 2px;
@@ -79,31 +74,25 @@ form {
 form input {
     width: 100%;
     height: 2rem;
-    color: black;
 }
 
-form legend {
+form label {
     width: 100%;
     text-align: start;
 }
 
 form input:not(input[type='submit']) {
-    display: flex;
-    flex-direction: column;
     border: 1px black solid;
     border-radius: 5px;
     padding: 5px;
-    background-color: white;
     margin: 10px;
 }
 
 form input[type='submit'] {
-    color: black;
     border: 1px black solid;
     border-radius: 5px;
     padding: 5px;
     margin: 40px;
-    background-color: white;
     cursor: pointer;
     width: 100%;
     transition: 0.2s;

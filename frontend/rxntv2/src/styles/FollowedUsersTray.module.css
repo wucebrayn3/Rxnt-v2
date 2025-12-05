@@ -7,6 +7,7 @@
     justify-content: flex-start;
     overflow: scroll;
     border: 1px black solid;
+    box-sizing: border-box;
 }
 
 .main::-webkit-scrollbar {
@@ -18,8 +19,11 @@
 }
 
 .header {
+    display: flex;
+    align-items: center;
     height: 50px;
     width: 100%;
+    padding: 5px;
     background-color: white;
     box-shadow: 0 5px 10px rgba(0,0,0,0.5);
     color: black;

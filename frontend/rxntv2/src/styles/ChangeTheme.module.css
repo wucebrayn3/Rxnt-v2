@@ -1,0 +1,49 @@
+.themes {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.theme_colors {
+    margin-top: 5px;
+    display: flex;
+    width: 100%;
+    height: 40px;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 5px;
+    box-sizing: border-box;
+}
+
+.theme_btn {
+    flex: 1 1 auto;
+    height: 100%;
+    min-width: 0px !important;
+    border-radius: 5px;
+    cursor: pointer;
+    /* max-width: 40px; */
+}
+
+.c1 {
+    background-color: #E0AFA0;
+}
+
+.c2 {
+    background-color: #4CC9F0;
+}
+
+.c3 {
+    background-color: #9D4EDD;
+}
+
+.c4 {
+    background-color: #274C77;
+}
+
+.c5 {
+    background-color: #2a9d8f;
+}
+
+.c6 {
+    background-color: #57CC99;
+}

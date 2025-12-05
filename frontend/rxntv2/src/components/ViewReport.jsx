@@ -9,6 +9,13 @@ export default function ViewReport ({ onClose, complainant, complainant_id, item
     const [toggleApprove, setToggleApprove] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
     const [sendTo, setSendTo] = useState(item_author_id);
+    const [topic, setTopic] = useState(null);
+    const [reply, setReply] = useState(null);
+    const [valid, setValid] = useState(false)
+
+    useEffect(() => {
+
+    })
 
     const handleCheckBox = (e) => {
         setIsChecked(e.target.checked);
@@ -70,14 +77,14 @@ export default function ViewReport ({ onClose, complainant, complainant_id, item
                 {toggleApprove && 
                     <form action="" onSubmit={sendNotification}>
                         <label htmlFor="topic">Topic:</label>
-                        <input type="text" name="topic" id="topic" />
+                        <input type="text" name="topic" id="topic" required maxLength={30}/>
                         <label htmlFor="reply">Reply: </label>
-                        <textarea name="reply" id="reply" rows={5}></textarea>
+                        <textarea name="reply" id="reply" rows={5} required maxLength={100}></textarea>
                         <div className={styles.chkbox}>
-                            <input checked={isChecked} onChange={handleCheckBox} type='checkbox' name="sendto" id="sendto"/>
+                            <span><input checked={isChecked} onChange={handleCheckBox} type='checkbox' name="sendto" id="sendto"/></span>
                             <label htmlFor="sendto">Send to complainant? (leave unchecked for reported user)</label>
                         </div>
-                        <input type="submit" value="Send Notification" />
+                        <button type='submit' disabled={valid}>Submit</button>
                     </form>
                 }
             </div>

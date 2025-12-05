@@ -3,6 +3,7 @@ import plus from '../assets/plus (1).png';
 import user from '../assets/user.png'
 import search from '../assets/loupe.png'
 import home from '../assets/home.png'
+import { useTheme } from "../utils/ThemeContext";
 
 import Logout from "./Logout";
 import { Link } from "react-router-dom";
@@ -12,40 +13,54 @@ import Menu from "./Menu";
 import styles from '../styles/AddButton.module.css'
 
 export default function Header({ onCreatePost, onSearchUser, users }) {
+
+  const {fontColor, color, bg2, shadow} = useTheme();
+
   const [isFixed, setIsFixed] = useState(false);
+  const [show, setShow] = useState(true)
+  const [yScroll, setYScroll] = useState(false)
 
   useEffect(() => {
+    let lastScroll = window.pageYOffset;
+
     const handleScroll = () => {
-      setIsFixed(window.scrollY > 0);
+      const currenScroll = window.pageYOffset;
+
+      if (currenScroll > lastScroll) {
+        setShow(false)
+      } else {
+        setShow(true)
+      };
+
+      lastScroll = currenScroll <= 0 ? 0: currenScroll;
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
 
   const defaultStyle = {
     position: "fixed",
+    top: '0',
     height: "60px",
     width: "100vw",
-    background: "white",
+    background: bg2,
     display: "flex",
     flexDirection: 'row',
     alignItems: "center",
     justifyContent: "center",
-    border: '2px black solid',
-    boxShadow: '0 5px 10px rgba(0,0,0,0.5)',
-    transition: "0.2s",
+    boxShadow: `0 5px 10px ${shadow}`,
+    transition: "0.5s",
     color: 'black',
     zIndex: 100
   };
 
   const fixedStyle = {
-    // border: "1px solid black",
-    borderRadius: "20px",
-    width:"calc(100vw - 40px)",
+    top: '-200px',
+    width:"100vw",
     height: "50px",
-    marginTop: "20px",
-    boxShadow: "0 0 10px rgba(0,0,0,0.75)",
+    boxShadow: `0 5px 10px ${shadow}`,
   };
 
     const getId = (un) => {
@@ -58,11 +73,11 @@ export default function Header({ onCreatePost, onSearchUser, users }) {
     <header
       style={{
         ...defaultStyle,
-        ...(isFixed ? fixedStyle : { position: "fixed" }),
+        ...(!show ? fixedStyle : { position: "fixed" }),
       }}
     >
       <h3 style={{position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', margin:'0'}}>You are logged in as: {localStorage.getItem('username')}</h3>
-      <div style={{display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'center'}}>
+      <div className={styles.btn_container} style={{'--shadow': color}}>
         
             <button  onClick={onCreatePost} className={styles.add_button}>
               <img style={{height: '100%'}} src={plus} alt="" />

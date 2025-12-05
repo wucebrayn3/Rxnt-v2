@@ -3,6 +3,10 @@
     cursor: pointer;
 }
 
+.main form {
+    position: absolute;
+}
+
 .main form input[type='submit'] {
     width: 20%;
     min-width: fit-content;

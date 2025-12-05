@@ -1,8 +1,11 @@
 import styles from '../styles/Threads.module.css'
 import axiosInstance from '../axiosInstance';
 import { useState, useEffect } from 'react';
+import { useTheme } from '../utils/ThemeContext';
 
 export default function CreatePostPanel () {
+
+    const {color, fontColor, shadow} = useTheme();
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -21,7 +24,7 @@ export default function CreatePostPanel () {
     }
 
     return (
-        <div className={styles.post_panel}>
+        <div className={styles.post_panel} style={{border: 'none', backgroundColor: color, color: fontColor, boxShadow: `0 5px 10px ${shadow}`}}>
             <h2>Create post</h2>
             <h3>{localStorage.getItem('username')}</h3>
             <form onSubmit={createPost}>

@@ -2,10 +2,15 @@
     position: relative;
     width: 30px;
     height: 30px;
-    border: 2px black solid;
     border-radius: 100px;
-    padding: 3px;
+    padding: 5px;
     box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.main:hover {
+    box-shadow: 0 0 10px var(--shadow);
+    transform: scale(1.05);
 }
 
 .main img {
@@ -17,13 +22,13 @@
     box-sizing: border-box  ;
     display: flex;
     flex-direction: column;
+    gap: 5px;
     top: 100%;
     right: 0;
     width: 250px;
     min-height: fit-content;
     max-height: 70vh;
-    padding: 10px;
-    background-color: #FEFEFE;
+    padding: 5px;
     box-shadow: 0 5px 10px rgba(0,0,0,0.5);
     border-radius: 10px;
 }
@@ -36,7 +41,7 @@
 
 .notif:hover {
     transform: scale(1.025);
-    background-color: #E0E0E0;
+    background-color: var(--highlight);
 }
 
 .notif * {

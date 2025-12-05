@@ -1,5 +1,6 @@
 import axiosInstance from "../axiosInstance";
 import { useEffect, useState } from "react";
+import { useTheme } from "../utils/ThemeContext";
 
 import ViewNotification from "./ViewNotification";
 
@@ -7,6 +8,9 @@ import styles from '../styles/NotificationTray.module.css';
 import noNotif from '../assets/notification (1).png';
 
 export default function NotificationTray () {
+
+    const {color, mode, bg2} = useTheme();
+
     const [toggle, setToggle] = useState(false)
     const [notifications, setNotifications] = useState([]);
     const [toggleView, setToggleView] = useState(false);
@@ -49,13 +53,14 @@ export default function NotificationTray () {
    }
 
     return (
-        
-        <div className={styles.main} onClick={handleToggle}>
-            <img src={noNotif} alt="" />
+        <>
+            <div className={styles.main} onClick={handleToggle} style={{'--shadow': color}}>
+                <img src={noNotif} alt="" />
+            </div>
             {toggle && 
-                <div className={styles.notifications} onClick={e => e.stopPropagation()}>
+                <div className={styles.notifications} onClick={e => e.stopPropagation()} style={{backgroundColor: mode}}>
                     {!toggleView && notifications.map(notif => (
-                        <div className={styles.notif} key={notif.id} onClick={() => viewNotif(notif.id, notif.topic, notif.content)} style={notif.is_read ? {backgroundColor: '#CEF8FF'} : {}}>
+                        <div className={styles.notif} key={notif.id} onClick={() => viewNotif(notif.id, notif.topic, notif.content)} style={notif.is_read ? {backgroundColor: color, '--highlight': bg2} : {'--highlight': bg2}}>
                             <h5>{notif.topic}</h5>
                             <p>{notif.content.length > 20 ? `${notif.content.slice(0,20)}...` : notif.content}</p>
                         </div>
@@ -63,7 +68,7 @@ export default function NotificationTray () {
                     {toggleView && <><button onClick={closeNotif} className={styles.close}>Close</button><ViewNotification id={notifId} topic={notifTopic} content={notifContent} reload={reload}/></>}
                 </div>
             }
-        </div>
+        </>
         
     );
 
