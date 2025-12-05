@@ -26,11 +26,29 @@
     top: 100%;
     right: 0;
     width: 250px;
-    min-height: fit-content;
-    max-height: 70vh;
+    min-height: 0;
+    max-height: 50vh;
     padding: 5px;
     box-shadow: 0 5px 10px rgba(0,0,0,0.5);
     border-radius: 10px;
+    overflow-y: overlay;
+}
+
+.notifications::-webkit-scrollbar {
+    width: 7px;
+    position: absolute;
+}
+
+.notifications::-webkit-scrollbar-track{
+    background: rgba(0,0,0,0.05);
+    margin: 5px;
+    border-radius: 10px;
+}
+
+.notifications::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 10px;
+    margin: 5px;
 }
 
 .notif {

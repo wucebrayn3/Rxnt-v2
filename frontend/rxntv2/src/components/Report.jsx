@@ -53,7 +53,7 @@ export default function Report ({ item_id, author, title, content, type, usernam
 
     return (
         <div className={styles.main}>
-            {type != 'user' && <h6 className={styles.report} onClick={report}>Report</h6>}
+            {type != 'user' && <h6 style={type == 'post' ? {'--hover': fontColor, zIndex: 1}:{color: '#ef233c', zIndex:-100}} className={styles.report} onClick={report}>Report</h6>}
             {type != 'user' && toggle && 
                 <div className={styles.report_panel}>
                     <div className={styles.report_panel_sub_container} style={{border: 'none', color: fontColor, backgroundColor: color}}>

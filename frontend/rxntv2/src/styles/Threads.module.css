@@ -28,11 +28,12 @@
     justify-content: space-between; 
     border: 3px solid;
     border-radius: 15px 15px 0px 0px; 
-    padding: 10px; 
+    padding: 20px; 
 }
 
 .upper_panel .date{
-    font-size: 0.75rem;
+    font-size: 0.6rem;
+    margin: 0;
 }
 
 .content {
@@ -132,6 +133,19 @@
     color: black;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+}
+
+.usernames {
+    cursor: pointer;
+    margin: 0;
+}
+
+.comment_content {
+    font-size: 0.8rem;
+}
+
+.post_content {
+    font-size: 0.9rem;
 }
 
 .result_container {
@@ -244,8 +258,13 @@
     width: fit-content;
     border: 2px black solid;
     border-radius: 10px;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    box-shadow: 0 2px 2px var(--shadow);
+    transition: 0.3s;
     overflow: hidden;
+}
+
+.trays:hover {
+    box-shadow: 0 2px 2px var(--color);
 }
 
 .profile_detail {

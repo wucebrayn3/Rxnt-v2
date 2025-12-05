@@ -38,3 +38,11 @@
     transform: scale(1.05);
 }
 
+.logo {
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.logo:hover {
+    filter: drop-shadow(0 3px 3px var(--shadow));
+}

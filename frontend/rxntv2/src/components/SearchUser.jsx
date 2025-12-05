@@ -40,7 +40,7 @@ export default function SearchUser () {
             </form>
             <div className={styles.result_container}>
                 {query && usersWith.sort().map(a=>{
-                    return <Link to={`/user/${a.id}`}><h3 key={a.id}>{a.username}</h3></Link>
+                    return <Link to={`/user/${a.id}`}><h3 style={{color: fontColor}} key={a.id}>{a.username}</h3></Link>
                 })
                 }
             </div>

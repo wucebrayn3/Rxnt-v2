@@ -2,9 +2,12 @@ import axiosInstance from "../axiosInstance";
 import { useState } from "react";
 import styles from '../styles/PostOption.module.css';
 import dots from '../assets/dots.png';
+import { useTheme } from "../utils/ThemeContext";
 
 export default function OptionBtn ({ objId, onDeletePost, onEditPost }) {
     
+    const {color, shadow} = useTheme();
+
     const [toggle, setToggle] = useState(false);
     const [toggleEdit, setToggleEdit] = useState(false);
 
@@ -29,7 +32,7 @@ export default function OptionBtn ({ objId, onDeletePost, onEditPost }) {
 ;
     return (
         <div className={styles.main}>
-            <button className={styles.option_btn} onClick={handleToggle}><img src={dots} alt="" /></button>
+            <button style={{border: 'none', '--shadow':shadow}} className={styles.option_btn} onClick={handleToggle}><img src={dots} alt="" /></button>
             {toggle && 
                 <div className={styles.option_panel}>
                     <h4 onClick={editPost}> Edit </h4>

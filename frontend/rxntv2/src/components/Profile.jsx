@@ -140,8 +140,8 @@ export default function UserProfile() {
                     (o.comments || []).length > 0 ?
                     <>
                         <div className={styles.upper_panel} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: color}}>
-                            <Link to={o.author ? `/user/${o.author}` : '#'}><h3>Author: {getUsername(o.author)}</h3></Link>
-                            <p className={styles.date}>{formatDate(o.created_at)}</p>
+                            <Link to={o.author ? `/user/${o.author}` : '#'}><h3 className={styles.usernames} style={{color: fontColor}} >{getUsername(o.author)}</h3></Link>
+                                <p className={styles.date}>{formatDate(o.created_at)}</p>
                             <OptionBtn objId={o.id} onDeletePost={loadProfile} onEditPost={edit}/>
                         </div>
                         <div className={styles.content} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: bg3}}>
@@ -167,8 +167,8 @@ export default function UserProfile() {
                     :
                     <>
                        <div className={styles.upper_panel} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: color}}>
-                            <Link to={o.author ? `/user/${o.author}` : '#'}><h3>Author: {getUsername(o.author)}</h3></Link>
-                            <p style={{fontSize: '0.7rem'}}>{formatDate(o.created_at)}</p>
+                            <Link to={o.author ? `/user/${o.author}` : '#'}><h3 className={styles.usernames} style={{color: fontColor}} >{getUsername(o.author)}</h3></Link>
+                                <p style={{fontSize: '0.7rem'}}>{formatDate(o.created_at)}</p>
                             <OptionBtn objId={o.id} onDeletePost={loadProfile} onEditPost={edit}/>
                         </div>
                         <div className={styles.content} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: bg3}}>
@@ -204,7 +204,7 @@ export default function UserProfile() {
                             o.parent == null && o.post === objId ?
                             <>
                                 <div className={styles.comment_item} style={{border: 'none', boxShadow: `0 2px 2px ${shadow}`, backgroundColor: mode}}>
-                                    <Link to={o.author ? `/user/${o.author}` : '#'}><h3>{getUsername(o.author)}</h3></Link>
+                                    <Link to={o.author ? `/user/${o.author}` : '#'}><h5 className={styles.usernames} style={{color: fontColor}} >{getUsername(o.author)}</h5></Link>
                                     {editTarget ? 
                                         <form action="" onReset={cancelEdit} onSubmit={e => {e.preventDefault(); saveComment(e)}} onChange={e => console.log(e.target.value)}>
                                             <textarea defaultValue={o.content} name="" id=""></textarea>
@@ -222,11 +222,11 @@ export default function UserProfile() {
                             o.parent != null && o.post === objId ?
                             <>
                                 <div className={styles.comment_item} style={{border: 'none', boxShadow: `0 2px 2px ${shadow}`, backgroundColor: mode}}>
-                                    <h3>
-                                        <Link to={o.author ? `/user/${o.author}` : '#'}>{getUsername(o.author)}</Link>
-                                        {' '}replied to{' '}
-                                        <Link to={getParentAuthorId(o.parent) ? `/user/${getParentAuthorId(o.parent)}` : '#'}>{getUsername(getParentAuthorId(o.parent))}</Link>
-                                    </h3>
+                                    <span style={{color: fontColor, display: 'flex'}} > 
+                                        <Link to={o.author ? `/user/${o.author}` : '#'}><h5  className={styles.usernames} style={{color: fontColor, display: 'flex'}}>{getUsername(o.author)}</h5></Link>
+                                        <h5 style={{color: fontColor}}>&nbsp;replied to&nbsp;</h5>
+                                        <Link to={getParentAuthorId(o.parent) ? `/user/${getParentAuthorId(o.parent)}` : '#'}><h5  className={styles.usernames} style={{color: fontColor, display: 'flex'}}>{getUsername(getParentAuthorId(o.parent))}</h5></Link>
+                                    </span>
                                     {editTarget ? 
                                         <form action="" onReset={cancelEdit} onSubmit={e => {e.preventDefault(); saveComment(e)}}>
                                             <textarea defaultValue={o.content} name="" id=""></textarea>

@@ -19,7 +19,6 @@
 .summary {
     width: 100%;
     height: 120px;
-    color: #DE9B9B;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -32,7 +31,6 @@
     height: 90%;
     border: 1px #dfbebeaa solid;
     border-radius: 10px;
-    background-color: #dfbebebf;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -78,7 +76,6 @@
 .columns {
     width: 100%;
     height: 50px;
-    background-color: #DFBEBE;
     display: flex;
     align-items: center;
 }
@@ -107,7 +104,6 @@
 .comment * ,
 .report *:not(.buttons) {
     flex: 1 1 0;
-    color: black;
     padding: 5px;
 }
 

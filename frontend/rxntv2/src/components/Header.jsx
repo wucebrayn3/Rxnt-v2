@@ -10,11 +10,11 @@ import { Link } from "react-router-dom";
 import NotificationTray from "./NotificationTray";
 import Menu from "./Menu";
 
-import styles from '../styles/AddButton.module.css'
+import styles from '../styles/AddButton.module.css';
 
 export default function Header({ onCreatePost, onSearchUser, users }) {
 
-  const {fontColor, color, bg2, shadow} = useTheme();
+  const {fontColor, color, bg2, shadow, logo, addIcon, searchIcon, userIcon, homeIcon, menuIcon} = useTheme();
 
   const [isFixed, setIsFixed] = useState(false);
   const [show, setShow] = useState(true)
@@ -53,7 +53,7 @@ export default function Header({ onCreatePost, onSearchUser, users }) {
     boxShadow: `0 5px 10px ${shadow}`,
     transition: "0.5s",
     color: 'black',
-    zIndex: 100
+    zIndex: 9999
   };
 
   const fixedStyle = {
@@ -76,26 +76,26 @@ export default function Header({ onCreatePost, onSearchUser, users }) {
         ...(!show ? fixedStyle : { position: "fixed" }),
       }}
     >
-      <h3 style={{position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', margin:'0'}}>You are logged in as: {localStorage.getItem('username')}</h3>
+      <img src={logo} className={styles.logo} style={{position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', margin:'0', height: '100%', '--shadow': color}}></img>
       <div className={styles.btn_container} style={{'--shadow': color}}>
         
             <button  onClick={onCreatePost} className={styles.add_button}>
-              <img style={{height: '100%'}} src={plus} alt="" />
+              <img style={{height: '100%'}} src={addIcon} alt="" />
             </button>
 
             <button onClick={onSearchUser} className={styles.search_button}>
-              <img style={{height: '100%'}} src={search}></img>
+              <img style={{height: '100%'}} src={searchIcon}></img>
             </button>  
 
             <Link to='/me'>
               <button  className={styles.me_button}>
-                <img style={{height: '100%'}} src={user}></img>
+                <img style={{height: '100%'}} src={userIcon}></img>
               </button>  
             </Link>
 
             <Link to='/thread'>
               <button  className={styles.me_button}>
-                <img style={{height: '100%'}} src={home}></img>
+                <img style={{height: '100%'}} src={homeIcon}></img>
               </button>  
             </Link>
         

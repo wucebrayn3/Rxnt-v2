@@ -1,6 +1,7 @@
 import axiosInstance from "../axiosInstance";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useTheme } from "../utils/ThemeContext";
 
 import ViewReport from "./ViewReport";
 import DashboardHeader from "./DashboardHeader";
@@ -13,6 +14,8 @@ export default function Dashboard () {
 
     const ako = localStorage.getItem('username');
     
+    const {mode, color, bg2, bg3, fontColor, shadow} = useTheme();
+
     const [users, setUsers] = useState([]);
     const [posts, setPosts] = useState([]);
     const [comments, setComments] = useState([]);
@@ -130,28 +133,28 @@ export default function Dashboard () {
     return (
         <div className={styles.maine_mendoza}>
             <DashboardHeader></DashboardHeader>
-            <div className={styles.main}>
+            <div className={styles.main} style={{backgroundColor: mode}}>
                 <div className={styles.summary}>
-                    <div className={styles.summary_sub_containers} onClick={() => setOverView('users')}>
+                    <div className={styles.summary_sub_containers} onClick={() => setOverView('users')} style={{border: 'none', backgroundColor: color, color: fontColor, boxShadow: `0 5px 10px ${shadow}`}}>
                         <h4>Users</h4>
                         <h2>{users.length}</h2>
                     </div>
-                    <div className={styles.summary_sub_containers} onClick={() => setOverView('posts')}>
+                    <div className={styles.summary_sub_containers} onClick={() => setOverView('posts')} style={{border: 'none', backgroundColor: color, color: fontColor, boxShadow: `0 5px 10px ${shadow}`}}>
                         <h4>Posts</h4>
                         <h2>{posts.length}</h2>
                     </div>
-                    <div className={styles.summary_sub_containers} onClick={() => setOverView('comments')}>
+                    <div className={styles.summary_sub_containers} onClick={() => setOverView('comments')} style={{border: 'none', backgroundColor: color, color: fontColor, boxShadow: `0 5px 10px ${shadow}`}}>
                         <h4>Comments</h4>
                         <h2>{comments.length}</h2>
                     </div>
-                    <div className={styles.summary_sub_containers} onClick={() => setOverView('reports')}>
+                    <div className={styles.summary_sub_containers} onClick={() => setOverView('reports')} style={{border: 'none', backgroundColor: color, color: fontColor, boxShadow: `0 5px 10px ${shadow}`}}>
                         <h4>Reports</h4>
                         <h2>{reports.flat().length}</h2>
                     </div>
                 </div>
 
-                <div className={styles.summary_overview}>
-                    <div className={styles.columns}>
+                <div className={styles.summary_overview} style={{ border: 'none', boxShadow: `0 5px 10px ${shadow}` }}>
+                    <div className={styles.columns} style={{border: 'none', backgroundColor: color, color: fontColor}}>
                         {overView === null ? <h4 className={styles.default_label}>Select a category above: Users, Posts, Comments, Reports</h4> : null}
                         {overView === 'users' &&
                             <>
@@ -192,7 +195,7 @@ export default function Dashboard () {
                     </div>
                     <>
                         {overView === 'users' ? users.map(user => (
-                            <div className={styles.user}>
+                            <div className={styles.user} style={{backgroundColor: bg2, color: fontColor}}>
                                 <h4>{user.username}</h4>
                                 <p>{user.is_staff ? 'Staff' : 'User'}</p>
                                 <p>Followers: {user.followers_count}</p>
@@ -205,7 +208,7 @@ export default function Dashboard () {
                     </>
                     <>
                         {overView === 'posts' ? posts.map(post => (
-                            <div className={styles.post} key={post.id}>
+                            <div className={styles.post} key={post.id} style={{backgroundColor: bg2, color: fontColor}}>
                                 <h4>{getUsername(post.author)}</h4>
                                 <p className={styles.title}>{post.title}</p>
                                 <p>{post.content.length > 20 ? post.content.slice(0,20) + '...' : post.content}</p>
@@ -233,7 +236,7 @@ export default function Dashboard () {
                     </>
                     <>
                         {overView === 'comments' ? comments.map(comment => (
-                            <div className={styles.comment} key={comment.id}>
+                            <div className={styles.comment} key={comment.id} style={{backgroundColor: bg2, color: fontColor}}>
                                 <div key={comment.id} className={styles.comment}>
                                     <h4>{getUsername(comment.author)}</h4>
                                     <p>{comment.content.length > 20 ? comment.content.slice(0,20) + '...' : comment.content}</p>
@@ -260,7 +263,7 @@ export default function Dashboard () {
                     <>
                         {overView === 'reports' ? reports.flat().map(report => (
                             <>
-                                <div className={styles.report} key={`${report.report_date}`}>
+                                <div className={styles.report} key={`${report.report_date}`} style={{backgroundColor: bg2, color: fontColor}}>
                                     <div className={styles.report} key={report.id}>
                                         <div className={styles.report_summary}>
                                             <h4>{getUsername(report.complainant)}</h4>

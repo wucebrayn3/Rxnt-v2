@@ -9,7 +9,7 @@ import noNotif from '../assets/notification (1).png';
 
 export default function NotificationTray () {
 
-    const {color, mode, bg2} = useTheme();
+    const {color, mode, bg2, fontColor} = useTheme();
 
     const [toggle, setToggle] = useState(false)
     const [notifications, setNotifications] = useState([]);
@@ -54,11 +54,11 @@ export default function NotificationTray () {
 
     return (
         <>
-            <div className={styles.main} onClick={handleToggle} style={{'--shadow': color}}>
+            <div className={styles.main} onClick={handleToggle} style={{'--shadow': color, color: fontColor}}>
                 <img src={noNotif} alt="" />
             </div>
             {toggle && 
-                <div className={styles.notifications} onClick={e => e.stopPropagation()} style={{backgroundColor: mode}}>
+                <div className={styles.notifications} onWheel={e => e.stopPropagation()} onClick={e => e.stopPropagation()} style={{backgroundColor: mode, color: fontColor}}>
                     {!toggleView && notifications.map(notif => (
                         <div className={styles.notif} key={notif.id} onClick={() => viewNotif(notif.id, notif.topic, notif.content)} style={notif.is_read ? {backgroundColor: color, '--highlight': bg2} : {'--highlight': bg2}}>
                             <h5>{notif.topic}</h5>

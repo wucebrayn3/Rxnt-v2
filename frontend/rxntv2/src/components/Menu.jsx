@@ -10,7 +10,7 @@ import styles from '../styles/Menu.module.css';
 
 export default function Menu () {
 
-    const {color, mode} = useTheme();
+    const {color, mode, menuIcon} = useTheme();
 
     const [toggle, setToggle] = useState(false)
 
@@ -21,7 +21,7 @@ export default function Menu () {
     return (
         <>
             <div onClick={e => {e.stopPropagation() ;handleToggle(e)}} className={styles.main} style={{'--shadow':color}}>
-                <img src={borgir} alt="burger menu" />
+                <img src={menuIcon} alt="burger menu" />
             </div>
             {toggle && 
                 <div className={styles.dropdown} onClick={e => e.stopPropagation()} style={{backgroundColor: mode}}>
