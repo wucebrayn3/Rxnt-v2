@@ -3,7 +3,7 @@ import axiosInstance from '../axiosInstance';
 import { useState, useEffect } from 'react';
 import { useTheme } from '../utils/ThemeContext';
 
-export default function CreatePostPanel () {
+export default function CreatePostPanel ({ onPost }) {
 
     const {color, fontColor, shadow} = useTheme();
 
@@ -18,6 +18,7 @@ export default function CreatePostPanel () {
             )
             setTitle('');
             setContent('');
+            onPost();
         } catch (err) {
             console.error('Error sa createpost: ' + err)
         }

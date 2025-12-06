@@ -15,6 +15,13 @@ export default function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (password.length < 8) {
+            return window.alert('Password must be longer than 8 characters.')
+        }
+        if (password.toLowerCase().includes(username.toLowerCase())) {
+            return window.alert('Password cannot contain your username')
+        }
+        
         try {
             const response = await axiosInstance.post('api/user/register/', 
                 {
@@ -39,10 +46,10 @@ export default function Register() {
                     <div className={styles.form_itself}>
                         <form onSubmit={handleSubmit} style={{color: fontColor}}>
                             <legend htmlFor='username'>Username</legend>
-                            <input onChange={(e) => setUsername(e.target.value)} type="text" name="username" id="username" style={{backgroundColor: mode, color: fontColor}} />
+                            <input autoComplete={false} onChange={(e) => setUsername(e.target.value)} type="text" name="username" id="username" style={{backgroundColor: mode, color: fontColor}} />
 
                             <legend htmlFor='password'>Password</legend>
-                            <input onChange={(e) => setPassword(e.target.value)} type="password" name="password" id="password" style={{backgroundColor: mode, color: fontColor}} />
+                            <input autoComplete={false} onChange={(e) => setPassword(e.target.value)} type="password" name="password" id="password" style={{backgroundColor: mode, color: fontColor}} />
 
                             <input type="submit" value="Submit" style={{color: fontColor, backgroundColor: mode}}/>
                         </form>

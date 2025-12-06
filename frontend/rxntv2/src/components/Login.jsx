@@ -36,7 +36,17 @@ export default function Login() {
             localStorage.setItem('username', username)
             localStorage.setItem('access',  tk)
             localStorage.setItem('refresh',  rf)
-            Navigate('/thread')
+            try {
+                const response = await axiosInstance.get('api/me/');
+
+                if (response.data.is_staff) {
+                    Navigate('/dashboard')
+                } else {
+                    Navigate('/thread')
+                }
+            } catch (err) {
+                console.error(err)
+            }
         } catch (err) {
             console.error(`May mali: ${err}`)
         }
@@ -72,10 +82,10 @@ export default function Login() {
                     <div className={styles.form_itself}> 
                         <form onSubmit={submit} onChange={handleChange} method="POST" style={{color: fontColor}}>
                             <label htmlFor='username'>Username</label>
-                            <input type="text" name="username" id="username"  placeholder='username' style={{backgroundColor: mode, color: fontColor}}/>
+                            <input autoComplete='off' autoCorrect='off' type="text" name="username" id="username"  placeholder='username' style={{backgroundColor: mode, color: fontColor}}/>
 
                             <label htmlFor='password'>Password</label>
-                            <input type="password" name="password" id="password" placeholder='password' style={{backgroundColor: mode, color: fontColor}}/>
+                            <input autoComplete='off' autoCorrect='off' type="password" name="password" id="password" placeholder='password' style={{backgroundColor: mode, color: fontColor}}/>
 
                             <input type="submit" value="Submit"  style={{color: fontColor, backgroundColor: mode}}/>
                         </form>

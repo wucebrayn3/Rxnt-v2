@@ -6,7 +6,7 @@ import { useTheme } from "../utils/ThemeContext";
 
 export default function OptionBtn ({ objId, onDeletePost, onEditPost }) {
     
-    const {color, shadow} = useTheme();
+    const {color, shadow, bg3, bg2, fontColor} = useTheme();
 
     const [toggle, setToggle] = useState(false);
     const [toggleEdit, setToggleEdit] = useState(false);
@@ -34,9 +34,9 @@ export default function OptionBtn ({ objId, onDeletePost, onEditPost }) {
         <div className={styles.main}>
             <button style={{border: 'none', '--shadow':shadow}} className={styles.option_btn} onClick={handleToggle}><img src={dots} alt="" /></button>
             {toggle && 
-                <div className={styles.option_panel}>
-                    <h4 onClick={editPost}> Edit </h4>
-                    <h4 onClick={deletePost}>Delete</h4>
+                <div className={styles.option_panel} style={{backgroundColor: bg3, color: fontColor}}>
+                    <h4 style={{ color:fontColor }} onClick={editPost}> Edit </h4>
+                    <h4 style={{ color:fontColor }} onClick={deletePost}>Delete</h4>
                 </div>
             }
         </div>

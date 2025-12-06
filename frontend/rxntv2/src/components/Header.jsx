@@ -98,6 +98,10 @@ export default function Header({ onCreatePost, onSearchUser, users }) {
                 <img style={{height: '100%'}} src={homeIcon}></img>
               </button>  
             </Link>
+
+            <Link to='/thread'>
+              <button className={styles.me_button} style={{height:'25px', color: fontColor}}>D</button>
+            </Link>
         
       </div>
       {/* <NotificationTray me={getId(user)}></NotificationTray> */}

@@ -124,10 +124,18 @@ export default function Threads() {
             })
             setActiveReplyId(null);
             loadComments();
+            loadPosts();
+            window.alert('lah')
         } catch (err) {
             console.error(err)
         }
     };
+
+    const loadAll = () => {
+        loadUsers();
+        loadPosts();
+        loadComments();
+    }
 
     useEffect(() => {
         if (!isLoaded.current) {
@@ -181,7 +189,7 @@ export default function Threads() {
 
                         <div className={styles.comment_container} style={{ backgroundColor: bg2 }}>
                             <h4>Comments:</h4>
-                            <CreateComment postId={o.id} reload={loadComments} />
+                            <CreateComment postId={o.id} reload={loadAll} />
                             <CommentConstructor obj={(o.comments || []).filter(c => c.parent == null)} objId={o.id} />
                         </div>
                     </div>
@@ -205,10 +213,10 @@ export default function Threads() {
                             </Link>
 
                             {editTarget == o.id && user == getUsername(o.author) ? (
-                                <form onReset={cancelEdit} onSubmit={saveComment}>
+                                <form onReset={cancelEdit} onSubmit={saveComment} style={{height: 'fit-content'}}>
                                     <textarea defaultValue={o.content} />
                                     <input type="reset" value="Cancel" />
-                                    <input type="submit" value="Save" />
+                                    <input type="submit" value="Save" style={{margin: '0'}}/>
                                 </form>
                             ) : (
                                 <>
@@ -254,22 +262,23 @@ export default function Threads() {
 
                             {activeReplyId === o.id && (
                                 <form
-                                    onSubmit={(e) => handleSubmit(e, o.id, objId)}
+                                    onSubmit={(e) => {handleSubmit(e, o.id, objId); loadComments();}}
                                     onReset={() => setActiveReplyId(null)}
                                     style={{
                                         width: '200px',
                                         backgroundColor: bg2,
                                         boxShadow: `0 2px 4px ${shadow}`,
                                         borderRadius: '10px',
+                                        margin: '0'
                                     }}
                                 >
                                     <input
                                         onChange={(e) => replyQuery.current = e.target.value}
                                         type="text"
-                                        style={{ width: '100%' }}
+                                        style={{ width: '100%', margin: '0' }}
                                     />
-                                    <input type="submit" value="Submit" style={{ width: '100%' }} />
-                                    <input type="reset" value="Cancel" />
+                                    <input type="submit" value="Submit" style={{ width: '100%', margin: '0' }} />
+                                    <input type="reset" value="Cancel" style={{ margin: "0"}}/>
                                 </form>
                             )}
 
@@ -286,7 +295,7 @@ export default function Threads() {
         <div style={{ placeItems: 'center', backgroundColor: mode, color: fontColor }}>
             <Header onCreatePost={() => togglePanel('createPost')} onSearchUser={() => togglePanel('searchUser')} users={users} />
 
-            {navState == 'createPost' && <CreatePostPanel />}
+            {navState == 'createPost' && <CreatePostPanel onPost={loadPosts}/>}
             {navState == 'searchUser' && <SearchUser />}
 
             <div className={styles.main}>
