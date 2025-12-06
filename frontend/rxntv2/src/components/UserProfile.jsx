@@ -21,7 +21,6 @@ export default function UserProfile() {
     const [profData, setProfData] = useState(null);
     const { id } = useParams();
 
-    // ✅ SEE MORE / SEE LESS STATE
     const [expandedPosts, setExpandedPosts] = useState({});
     const [expandedComments, setExpandedComments] = useState({});
 
@@ -225,7 +224,7 @@ export default function UserProfile() {
                 {toggle && <Report type={'user'} username={getUsername(Number(id))} item_id={Number(id)} close={handleReport}></Report>}
                 {userData && users && <PostConstructor obj={userData}/>}
                 {profData && 
-                    <div className={styles.profile_detail} style={{backgroundColor: mode, border: 'none', boxShadow: `0 10px 10px ${shadow}`, color: fontColor}}>
+                    <div className={styles.profile_detail} style={{'--line': fontColor, '--shadow': shadow, backgroundColor: mode, border: 'none', color: fontColor}}>
                         <div className={styles.username} style={{color: fontColor}}>
                             <h1>{profData.username}</h1>
                             <FollowButton is_following_user={profData.is_following} id={id} onBtnClick={reload}/>

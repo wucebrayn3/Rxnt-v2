@@ -3,7 +3,7 @@ import { useTheme } from "../utils/ThemeContext";
 import styles from '../styles/ChangeTheme.module.css';
 
 export default function ThemeButton() {
-  const { mode, fontColor, toggleMode, toggleFontColor, toggleColor, toggleIcon, toggleShadow, shadow, toggleBorder, toggleBg2, toggleBg3, toggleLogo } = useTheme();
+  const { mode, fontColor, toggleMode, toggleFontColor, toggleColor, toggleIcon, toggleShadow, shadow, toggleBorder, toggleBg2, toggleBg3, toggleLogo, toggleLogo2, logo2 } = useTheme();
 
   const btnText = mode === '#F5F5F5' ? 'Dark mode' : 'Light mode';
 
@@ -20,6 +20,7 @@ export default function ThemeButton() {
             toggleBg2();
             toggleLogo();
             toggleIcon();
+            toggleLogo2();
         }}
         style={{
             backgroundColor: mode,

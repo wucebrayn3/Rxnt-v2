@@ -3,6 +3,9 @@ import { useContext, useState, useEffect, createContext } from "react";
 import darkmodeLogo from '../assets/logo 128x128.png';
 import lightmodeLogo from '../assets/logo 128x128 2.png';
 
+import darkIllus from '../assets/dark mode illus.png';
+import lightIllus from '../assets/light mode illus.png';
+
 import darkmodeSearch from '../assets/loupe (1).png'
 import lightmodeSearch from '../assets/loupe.png'
 
@@ -18,6 +21,24 @@ import lightmodeHome from '../assets/home.png'
 import lightmodeHamburger from '../assets/menu (2).png'
 import darkmodeHamburger from '../assets/menu (9).png'
 
+import darkmodePencil from '../assets/pencil (1).png';
+import lightmodePencil from '../assets/pencil.png';
+
+import darkmodeCommunity from '../assets/social-justice (1).png'
+import lightmodeCommunity from '../assets/social-justice.png'
+
+import darkmodeHeart from '../assets/heart (1).png';
+import lightmodeHeart from '../assets/heart.png';
+
+import darkfb from '../assets/fb.png';
+import lightfb from '../assets/fb 2.png';
+
+import darkig from '../assets/ig.png';
+import lightig from '../assets/ig 2.png';
+
+import darkthreads from '../assets/threads.png';
+import lightthreads from '../assets/threads 2.png';
+
 const ThemeContext = createContext();
 
 export function ThemeProvider  ({ children }) {
@@ -29,11 +50,18 @@ export function ThemeProvider  ({ children }) {
     const [fontColor, setFontColor] = useState('#212529');
     const [border, setBorder] = useState('#000000');
     const [logo, setLogo] = useState(lightmodeLogo);
+    const [logo2, setLogo2] = useState(lightIllus);
     const [addIcon, setAddIcon] = useState(lightmodeAdd);
     const [searchIcon, setSearchIcon] = useState(lightmodeSearch);
     const [userIcon, setUserIcon] = useState(lightkmodeUser);
     const [homeIcon, setHomeIcon] = useState(lightmodeHome);
     const [menuIcon, setMenuIcon] = useState(lightmodeHamburger);
+    const [pencilIcon, setPencilIcon] = useState(lightmodePencil);
+    const [communityIcon, setCommunityIcon] = useState(lightmodeCommunity);
+    const [heartIcon, setHeartIcon] = useState(lightmodeHeart);
+    const [fb, setFb] = useState(darkfb);
+    const [ig, setIg] = useState(darkig);
+    const [threads, setThreads] = useState(darkthreads);
 
     function toggleMode () {
         setMode(prev => prev === '#F5F5F5' ? '#1A1A1A' : '#F5F5F5');
@@ -67,12 +95,22 @@ export function ThemeProvider  ({ children }) {
         setLogo(l => l === lightmodeLogo ? darkmodeLogo : lightmodeLogo)
     }
 
+    function toggleLogo2 () {
+        setLogo2(l => l === lightIllus ? darkIllus : lightIllus)
+    }
+
     function toggleIcon () {
         setAddIcon(ai => ai === lightmodeAdd ? darkmodeAdd : lightmodeAdd);
         setSearchIcon(si => si === lightmodeSearch ? darkmodeSearch : lightmodeSearch);
         setUserIcon(ui => ui === lightkmodeUser ? darkmodeUser : lightkmodeUser);
         setHomeIcon(hi => hi === lightmodeHome ? darkmodeHome : lightmodeHome);
-        setMenuIcon(mi => mi === lightmodeHamburger ? darkmodeHamburger : lightmodeHamburger)
+        setMenuIcon(mi => mi === lightmodeHamburger ? darkmodeHamburger : lightmodeHamburger);
+        setPencilIcon(pi => pi === lightmodePencil ? darkmodePencil : lightmodePencil);
+        setCommunityIcon(ci => ci === lightmodeCommunity ? darkmodeCommunity : lightmodeCommunity);
+        setHeartIcon(hi => hi === lightmodeHeart ? darkmodeHeart : lightmodeHeart);
+        setFb(smi => smi === lightfb ? darkfb : lightfb);
+        setIg(smi => smi === lightig ? darkig : lightig);
+        setThreads(smi => smi === lightthreads ? darkthreads : lightthreads);
     }
 
     return (
@@ -91,6 +129,13 @@ export function ThemeProvider  ({ children }) {
             userIcon,
             homeIcon,
             menuIcon,
+            logo2,
+            pencilIcon,
+            communityIcon,
+            heartIcon,
+            fb,
+            ig,
+            threads,
             toggleMode,
             toggleColor,
             toggleShadow,
@@ -100,6 +145,7 @@ export function ThemeProvider  ({ children }) {
             toggleBorder,
             toggleLogo,
             toggleIcon,
+            toggleLogo2,
         }}
         >
             { children }
