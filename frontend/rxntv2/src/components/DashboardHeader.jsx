@@ -3,11 +3,15 @@ import { useEffect, useState } from "react";
 import Logout from "./Logout";
 import { Link } from "react-router-dom";
 import Menu from "./Menu";
+import { useTheme } from "../utils/ThemeContext";
 
 import adminsvg from '../assets/admin.svg';
 import styles from '../styles/DashboardHeader.module.css';
 
 export default function DashboardHeader() {
+
+  const {mode, fontColor, bg2} = useTheme();
+
   const [isFixed, setIsFixed] = useState(false);
 
   useEffect(() => {
@@ -23,7 +27,7 @@ export default function DashboardHeader() {
     position: "fixed",
     height: "60px",
     width: "100vw",
-    background: "white",
+    background: bg2,
     display: "flex",
     flexDirection: 'row',
     alignItems: "center",

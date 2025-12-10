@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import axiosInstance from "../axiosInstance"
 import { useTheme } from "../utils/ThemeContext";
@@ -19,10 +19,12 @@ export default function UserProfile() {
     const [comments, setComments] = useState([]);
     const [allComments, setAllComments] = useState([]);
     const [profData, setProfData] = useState(null);
+    const [email, setEmail] = useState(null)
     const { id } = useParams();
 
     const [expandedPosts, setExpandedPosts] = useState({});
     const [expandedComments, setExpandedComments] = useState({});
+    const [visibleComments, setVisibleComments] = useState({}); // ✅ NEW
 
     const replyQuery = useRef(null);
 
@@ -40,6 +42,24 @@ export default function UserProfile() {
         }));
     };
 
+    // ✅ COMMENT PAGINATION LOGIC
+    const showMoreComments = (postId, total) => {
+        setVisibleComments(prev => {
+            const current = prev[postId] || 1;
+            return {
+                ...prev,
+                [postId]: Math.min(current + 5, total)
+            };
+        });
+    };
+
+    const showLessComments = (postId) => {
+        setVisibleComments(prev => ({
+            ...prev,
+            [postId]: 1
+        }));
+    };
+
     const loadFollow = async () => {
         try {
             const response = await axiosInstance.get('discover/');
@@ -53,6 +73,7 @@ export default function UserProfile() {
         try {
             const response = await axiosInstance.get(`app/user/${id}`);
             setUserData(response.data);
+            setEmail(response.data.email)
         } catch (err) {
             console.error('May mali sa profile' + err);
         };
@@ -77,8 +98,8 @@ export default function UserProfile() {
     const loadComments = async () => {
         try {
             const response = await axiosInstance.get('app/comments/');
-            setAllComments((response.data));
-            setComments((response.data).filter(data => data.parent == null));
+            setAllComments(response.data);
+            setComments(response.data.filter(data => data.parent == null));
         } catch (err) {
             console.error('May mali sa pagkuha ng comments pare ko: ', err);
         };
@@ -113,10 +134,25 @@ export default function UserProfile() {
             const isExpandedPost = expandedPosts[o.id];
             const isLongPost = o.content?.length > 200;
 
+            const topLevel = (o.comments || []).filter(c => c.parent == null);
+            const visibleCount = visibleComments[o.id] || 1;
+            const visibleList = topLevel.slice(0, visibleCount);
+
             return (
                 <div key={o.id} className={styles.post_container} style={{color: fontColor}}>
                     <div className={styles.upper_panel} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: color}}>
-                        <Link to={o.author ? `/user/${o.author}` : '#'}><h3  style={{color: fontColor}}>{getUsername(o.author)}</h3></Link>
+                        <div className={styles.author}>
+                            <img src={`http://localhost:8000${o.author_pfp}`} alt="user pfp" />
+                            <div>
+                                <Link to={o.author ? `/user/${o.author}` : '#'}>
+                                    <h3 className={styles.usernames} style={{color: fontColor}} >
+                                        {getUsername(o.author)}
+                                    </h3>
+                                </Link>
+                                <p><i>{email}</i></p>
+                            </div>
+                        </div>
+
                         <div>
                             <p className={styles.date}>{formatDate(o.created_at)}</p>
                             <Report item_id={o.id} author={o.author} username={getUsername(o.author)} title={o.title} content={o.content} type={'post'} />
@@ -124,7 +160,7 @@ export default function UserProfile() {
                     </div>
 
                     <div className={styles.content} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: bg3}}>
-                        <h4>Title: {o.title}</h4>
+                        <h4>{o.title}</h4>
 
                         <p
                             style={{
@@ -139,7 +175,6 @@ export default function UserProfile() {
 
                         {isLongPost && (
                             <span
-                                
                                 onClick={() => toggleExpandPost(o.id)}
                                 style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: color, fontWeight: 'bold' }}
                             >
@@ -147,12 +182,45 @@ export default function UserProfile() {
                             </span>
                         )}
 
-                        { (o.comments || []).length > 0 &&
+                        { topLevel.length > 0 && (
                             <div className={styles.comment_container} style={{backgroundColor: bg2}}>
                                 <h4>Comments:</h4>
-                                <CommentConstructor obj={(o.comments || []).filter(c => c.parent == null)} objId={o.id}/>
+
+                                <CommentConstructor obj={visibleList} objId={o.id} />
+
+                                {topLevel.length > 1 && (
+                                    <div style={{ marginTop: "8px" }}>
+                                        {visibleCount < topLevel.length ? (
+                                            <button
+                                                onClick={() => showMoreComments(o.id, topLevel.length)}
+                                                style={{
+                                                    background: "none",
+                                                    border: "none",
+                                                    cursor: "pointer",
+                                                    color: color,
+                                                    fontWeight: "bold"
+                                                }}
+                                            >
+                                                See more comments
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => showLessComments(o.id)}
+                                                style={{
+                                                    background: "none",
+                                                    border: "none",
+                                                    cursor: "pointer",
+                                                    color: color,
+                                                    fontWeight: "bold"
+                                                }}
+                                            >
+                                                See less comments
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
                             </div>
-                        }
+                        )}
                     </div>
                 </div>
             );
@@ -168,16 +236,11 @@ export default function UserProfile() {
                 return (
                     <div key={o.id} className={styles.comment_subcontainer}>
                         <div className={styles.comment_item} style={{border: 'none', boxShadow: `0 2px 2px ${shadow}`, backgroundColor: mode}}>
-                            {o.parent != null ?
-                                <span style={{display: 'flex'}}>
-                                    <Link to={o.author ? `/user/${o.author}` : '#'}><h5 className={styles.usernames} style={{color: fontColor}}>{getUsername(o.author)}</h5></Link>
-                                    <h5  style={{color: fontColor}}>&nbsp;replied to&nbsp;</h5>
-                                    <Link to={getParentAuthorId(o.parent) ? `/user/${getParentAuthorId(o.parent)}` : '#'}><h5 className={styles.usernames} style={{color: fontColor}}>{getUsername(getParentAuthorId(o.parent))}</h5></Link>
-                                </span>
-
-                                :
-                                <Link to={o.author ? `/user/${o.author}` : '#'}><h5 className={styles.usernames} style={{color: fontColor}}>{getUsername(o.author)}</h5></Link>
-                            }
+                            <Link to={o.author ? `/user/${o.author}` : '#'}>
+                                <h5 className={styles.usernames} style={{color: fontColor}}>
+                                    {getUsername(o.author)}
+                                </h5>
+                            </Link>
 
                             <p
                                 style={{
@@ -192,14 +255,12 @@ export default function UserProfile() {
 
                             {isLongComment && (
                                 <span
-                                    type="button"
                                     onClick={() => toggleExpandComment(o.id)}
-                                    style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: color, fontWeight: 'bold', fontSize: '0.85rem' }}
+                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: color, fontWeight: 'bold', fontSize: '0.85rem' }}
                                 >
                                     {isExpandedComment ? 'See less' : 'See more'}
                                 </span>
                             )}
-                            
                         </div>
 
                         <CommentConstructor obj={(o.replies || [])} objId={o.post}/>
@@ -219,17 +280,21 @@ export default function UserProfile() {
 
     return (
         <div className={styles.main_nanaman} style={{backgroundColor: mode}}>
-            <Header  onCreatePost={()=>{}} onSearchUser={()=>{}} users={users}/>
+            <Header onCreatePost={()=>{}} onSearchUser={()=>{}} users={users}/>
             <div className={styles.main}>
                 {toggle && <Report type={'user'} username={getUsername(Number(id))} item_id={Number(id)} close={handleReport}></Report>}
                 {userData && users && <PostConstructor obj={userData}/>}
+
                 {profData && 
                     <div className={styles.profile_detail} style={{'--line': fontColor, '--shadow': shadow, backgroundColor: mode, border: 'none', color: fontColor}}>
                         <div className={styles.username} style={{color: fontColor}}>
                             <h1>{profData.username}</h1>
                             <FollowButton is_following_user={profData.is_following} id={id} onBtnClick={reload}/>
-                            <button className={styles.report_btn} style={{border: 'none', color: mode, backgroundColor: fontColor, boxShadow: `0 2px 4px ${shadow}`}} onClick={handleReport}>Report User</button>
+                            <button className={styles.report_btn} style={{border: 'none', color: mode, backgroundColor: fontColor, boxShadow: `0 2px 4px ${shadow}`}} onClick={handleReport}>
+                                Report User
+                            </button>
                         </div>
+
                         <div className={styles.follow} style={{color: fontColor}}>
                             <h3>Followers: {profData.followers_count}</h3>
                             <h3>Following: {profData.following_count}</h3>

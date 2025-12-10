@@ -1,8 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    profile_pic = models.ImageField(null=True, blank=True, default='userprofile/default_user.png', upload_to='userprofile/')
+    bio = models.TextField(max_length=100)
+
 class Post(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=50)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(default=None, null=True, blank=True)
@@ -58,7 +63,7 @@ class ReportNonUser(models.Model):
     reported_object = models.CharField(max_length=15) # post or comment
     reported_id = models.IntegerField() # post/comment id
     content = models.TextField() # post/comment content
-    title = models.CharField(max_length=100, blank=True, null=True, default="Untitled") # applicable for posts as comments have no title
+    title = models.CharField(max_length=50, blank=True, null=True, default="Untitled") # applicable for posts as comments have no title
     reason = models.TextField(max_length=255)
     report_date = models.DateTimeField(auto_now_add=True)
     
@@ -76,12 +81,15 @@ class ReportUser(models.Model):
         return f'Reported user: {self.reported_user.username}'
     
 class Notification(models.Model):
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_recipient')
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notification_sender')
+    recipients = models.ManyToManyField(User, related_name='notifications_received')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications_sent')
     topic = models.CharField(max_length=50, default='Unnamed Notification')
     content = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
     
     def __str__(self):
-        return f'{self.sender.username} notified {self.recipient.username}'
+        recipient_names = ', '.join([u.username for u in self.recipients.all()[:3]])
+        if self.recipients.count() > 3:
+            recipient_names += f' +{self.recipients.count() - 3} more'
+        return f'{self.sender.username} notified {recipient_names}'

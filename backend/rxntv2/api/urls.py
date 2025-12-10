@@ -21,4 +21,5 @@ urlpatterns = [
     path('delete-non-user-report/<int:pk>/', views.DeleteReportNonUserView.as_view(), name='delete-report-non-user'),
     path('report/user/', views.ReportUserView.as_view(), name='report-user'),
     path('delete-user-report/<int:pk>/', views.DeleteReportUserView.as_view(), name='delete-user-report'),
+    path('filter/', views.username_restriction, name='filter'),
 ]

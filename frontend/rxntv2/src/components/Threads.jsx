@@ -14,7 +14,7 @@ import styles from '../styles/Threads.module.css';
 
 export default function Threads() {
 
-    const { mode, color, shadow, fontColor, bg2, bg3, border } = useTheme();
+    const { mode, color, shadow, fontColor, bg2, bg3 } = useTheme();
     const user = localStorage.getItem('username');
 
     const isLoaded = useRef(false);
@@ -27,10 +27,9 @@ export default function Threads() {
     const [editTarget, setEditTarget] = useState(null);
 
     const [activeReplyId, setActiveReplyId] = useState(null);
-
     const [expandedPosts, setExpandedPosts] = useState({});
-
     const [expandedComments, setExpandedComments] = useState({});
+    const [visibleComments, setVisibleComments] = useState({}); // ✅ NEW
 
     const replyQuery = useRef(null);
 
@@ -45,6 +44,24 @@ export default function Threads() {
         setExpandedComments(prev => ({
             ...prev,
             [commentId]: !prev[commentId]
+        }));
+    };
+
+    // ✅ COMMENT PAGINATION (1 → +5 → RESET)
+    const showMoreComments = (postId, total) => {
+        setVisibleComments(prev => {
+            const current = prev[postId] || 1;
+            return {
+                ...prev,
+                [postId]: Math.min(current + 5, total)
+            };
+        });
+    };
+
+    const showLessComments = (postId) => {
+        setVisibleComments(prev => ({
+            ...prev,
+            [postId]: 1
         }));
     };
 
@@ -125,7 +142,6 @@ export default function Threads() {
             setActiveReplyId(null);
             loadComments();
             loadPosts();
-            window.alert('lah')
         } catch (err) {
             console.error(err)
         }
@@ -150,6 +166,10 @@ export default function Threads() {
         (obj || []).map((o) => {
             const isExpanded = expandedPosts[o.id];
             const isLong = o.content?.length > 200;
+
+            const topLevel = (o.comments || []).filter(c => c.parent == null);
+            const visibleCount = visibleComments[o.id] || 1;
+            const visibleList = topLevel.slice(0, visibleCount);
 
             return (
                 <div key={o.id} className={styles.post_container}>
@@ -188,9 +208,44 @@ export default function Threads() {
                         )}
 
                         <div className={styles.comment_container} style={{ backgroundColor: bg2 }}>
-                            <h4>Comments:</h4>
+                            <h4>{o.comments.length} {o.comments.length > 1 ? 'comments' : 'comment'}</h4>
+
                             <CreateComment postId={o.id} reload={loadAll} />
-                            <CommentConstructor obj={(o.comments || []).filter(c => c.parent == null)} objId={o.id} />
+
+                            <CommentConstructor obj={visibleList} objId={o.id} />
+
+                            {topLevel.length > 1 && (
+                                <div style={{ marginTop: "8px" }}>
+                                    {visibleCount < topLevel.length ? (
+                                        <button
+                                            onClick={() => showMoreComments(o.id, topLevel.length)}
+                                            style={{
+                                                background: "none",
+                                                border: "none",
+                                                cursor: "pointer",
+                                                color: color,
+                                                fontWeight: "bold"
+                                            }}
+                                        >
+                                            See more comments
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() => showLessComments(o.id)}
+                                            style={{
+                                                background: "none",
+                                                border: "none",
+                                                cursor: "pointer",
+                                                color: color,
+                                                fontWeight: "bold"
+                                            }}
+                                        >
+                                            See less comments
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+
                         </div>
                     </div>
                 </div>
@@ -213,10 +268,10 @@ export default function Threads() {
                             </Link>
 
                             {editTarget == o.id && user == getUsername(o.author) ? (
-                                <form onReset={cancelEdit} onSubmit={saveComment} style={{height: 'fit-content'}}>
+                                <form onReset={cancelEdit} onSubmit={saveComment}>
                                     <textarea defaultValue={o.content} />
                                     <input type="reset" value="Cancel" />
-                                    <input type="submit" value="Save" style={{margin: '0'}}/>
+                                    <input type="submit" value="Save"/>
                                 </form>
                             ) : (
                                 <>
@@ -264,21 +319,13 @@ export default function Threads() {
                                 <form
                                     onSubmit={(e) => {handleSubmit(e, o.id, objId); loadComments();}}
                                     onReset={() => setActiveReplyId(null)}
-                                    style={{
-                                        width: '200px',
-                                        backgroundColor: bg2,
-                                        boxShadow: `0 2px 4px ${shadow}`,
-                                        borderRadius: '10px',
-                                        margin: '0'
-                                    }}
                                 >
                                     <input
                                         onChange={(e) => replyQuery.current = e.target.value}
                                         type="text"
-                                        style={{ width: '100%', margin: '0' }}
                                     />
-                                    <input type="submit" value="Submit" style={{ width: '100%', margin: '0' }} />
-                                    <input type="reset" value="Cancel" style={{ margin: "0"}}/>
+                                    <input type="submit" value="Submit" />
+                                    <input type="reset" value="Cancel"/>
                                 </form>
                             )}
 

@@ -45,7 +45,7 @@ export function ThemeProvider  ({ children }) {
     const [mode, setMode] = useState('#F5F5F5');
     const [bg2, setBg2] = useState('#e7e8ebff');
     const [bg3, setBg3] = useState('#FEFEFE');
-    const [color, setColor] = useState('#57CC99');
+    const [color, setColor] = useState('#2A9D8F');
     const [shadow, setShadow] = useState('rgba(0,0,0,0.5)');
     const [fontColor, setFontColor] = useState('#212529');
     const [border, setBorder] = useState('#000000');

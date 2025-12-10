@@ -25,6 +25,8 @@ export default function UserProfile() {
     const [allComments, setAllComments] = useState([]);
     const [editTarget, setEditTarget] = useState(null);
     const [navState, setNavState] = useState(null);
+    const [email, setEmail] = useState(null)
+    const [pfp, setPfp] = useState(null);
 
     const [isStaff, setIsStaff] = useState(false);
 
@@ -38,6 +40,8 @@ export default function UserProfile() {
                 return;
             }
 
+            setPfp(response.data.user_pfp)
+            setEmail(response.data.email)
             setComments(response.data.comments)
             setUserData(response.data)
 
@@ -140,8 +144,14 @@ export default function UserProfile() {
                     (o.comments || []).length > 0 ?
                     <>
                         <div className={styles.upper_panel} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: color}}>
-                            <Link to={o.author ? `/user/${o.author}` : '#'}><h3 className={styles.usernames} style={{color: fontColor}} >{getUsername(o.author)}</h3></Link>
-                                <p className={styles.date}>{formatDate(o.created_at)}</p>
+                            <div className={styles.author}>
+                                <img src={`http://localhost:8000${o.author_pfp}`} alt="user pfp" />
+                                <div>
+                                    <Link to={o.author ? `/user/${o.author}` : '#'}><h3 className={styles.usernames} style={{color: fontColor}} >{getUsername(o.author).length > 15 ? `${getUsername(o.author).slice(0,15)}...`: getUsername(o.author)}</h3></Link>
+                                    <p><i>{email}</i></p>
+                                </div>
+                            </div>
+                            <p className={styles.date}>{formatDate(o.created_at)}</p>
                             <OptionBtn objId={o.id} onDeletePost={loadProfile} onEditPost={edit}/>
                         </div>
                         <div className={styles.content} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: bg3}}>
@@ -154,7 +164,7 @@ export default function UserProfile() {
                             </form>
                             :
                             <>
-                                <h4>Title: {o.title}</h4>
+                                <h4>{o.title}</h4>
                                 <p>{o.content}</p>
                             </>
                             }
@@ -167,8 +177,14 @@ export default function UserProfile() {
                     :
                     <>
                        <div className={styles.upper_panel} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: color}}>
-                            <Link to={o.author ? `/user/${o.author}` : '#'}><h3 className={styles.usernames} style={{color: fontColor}} >{getUsername(o.author)}</h3></Link>
-                                <p style={{fontSize: '0.7rem'}}>{formatDate(o.created_at)}</p>
+                            <div className={styles.author}>
+                                <img src={`http://localhost:8000${o.author_pfp}`} alt="user pfp" />
+                                <div>
+                                    <Link to={o.author ? `/user/${o.author}` : '#'}><h3 className={styles.usernames} style={{color: fontColor}} >{getUsername(o.author).length > 15 ? `${getUsername(o.author).slice(0,15)}...`: getUsername(o.author)}</h3></Link>
+                                    <p><i>{email}</i></p>
+                                </div>
+                            </div>
+                            <p style={{fontSize: '0.7rem'}}>{formatDate(o.created_at)}</p>
                             <OptionBtn objId={o.id} onDeletePost={loadProfile} onEditPost={edit}/>
                         </div>
                         <div className={styles.content} style={{border: 'none', boxShadow: `0 2px 4px ${shadow}`, backgroundColor: bg3}}>
@@ -181,7 +197,7 @@ export default function UserProfile() {
                             </form>
                             :
                             <>
-                                <h4>Title: {o.title}</h4>
+                                <h4>{o.title}</h4>
                                 <p>{o.content}</p>
                             </>
                             }
@@ -261,8 +277,17 @@ export default function UserProfile() {
             {navState == 'createPost' && <CreatePostPanel />}
             {navState == 'searchUser' && <SearchUser />}
             <div className={styles.main}>
-                
                 {userData && users && <PostConstructor obj={userData}/>}
+                <div className={styles.profile}>
+                    <div className={styles.upper_div} style={{backgroundColor: bg2, border: `5px ${mode} solid`}}></div>
+                    <div className={styles.lower_div} style={{backgroundColor: color, border: `5px ${mode} solid`}}>
+                    </div>
+                    <div className={styles.pfp_summary}>
+                        <img src={`http://localhost:8000${pfp}`} alt="" style={{border: `5px ${mode} solid`, borderRadius: '100%', backgroundColor: mode}} />
+                        <h1>{user}</h1>
+                        <h3><i>{email}</i></h3>
+                    </div>
+                </div>
             </div>
         </div>
     )
