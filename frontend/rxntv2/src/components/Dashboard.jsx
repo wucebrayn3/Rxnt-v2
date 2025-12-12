@@ -33,7 +33,8 @@ export default function Dashboard () {
             setUsers(response.data.users);
             setPosts(response.data.posts);
             setComments(response.data.comments)
-            setReports([response.data.non_user_reports, response.data.user_reports]);
+            // flatten non-user and user reports into a single array for the frontend
+            setReports([...(response.data.non_user_reports || []), ...(response.data.user_reports || [])]);
         } catch (err) {
             console.error(`Everything crashed: ${err}`)
         }
@@ -66,7 +67,7 @@ export default function Dashboard () {
         try {
             const response = await axiosInstance.post('app/notifications/', 
                 {
-                    recipient: Number(to),
+                    recipients: [to],
                     sender: getId(ako),
                     topic: `${type.toUpperCase()} removed by admin`,
                     content: `Your ${type} has been removed, check notifications.`,
@@ -84,8 +85,12 @@ export default function Dashboard () {
     const removeReport = async (id, type) => {
         console.log(type)
         try {
-            if (type != 'User') {const response = await axiosInstance.delete(`app/delete-non-user-report/${id}/`)}
-            if (type == 'User') {const response = await axiosInstance.delete(`app/delete-user-report/${id}/`)}
+            // backend routes: app/report/content/<id>/delete/ and app/report/user/<id>/delete/
+            if (type === 'User') {
+                await axiosInstance.delete(`app/report/user/${id}/delete/`)
+            } else {
+                await axiosInstance.delete(`app/report/content/${id}/delete/`)
+            }
             loadEverythingAtOnce();
         } catch (err) {
             console.error(`Hindi ma-apruba ang report: ${err}`)
@@ -149,7 +154,7 @@ export default function Dashboard () {
                     </div>
                     <div className={styles.summary_sub_containers} onClick={() => setOverView('reports')} style={{border: 'none', backgroundColor: color, color: fontColor, boxShadow: `0 5px 10px ${shadow}`}}>
                         <h4>Reports</h4>
-                        <h2>{reports.flat().length}</h2>
+                        <h2>{reports.length}</h2>
                     </div>
                 </div>
 
@@ -209,7 +214,7 @@ export default function Dashboard () {
                     <>
                         {overView === 'posts' ? posts.map(post => (
                             <div className={styles.post} key={post.id} style={{backgroundColor: bg2, color: fontColor}}>
-                                <h4>{getUsername(post.author)}</h4>
+                                <h4>{getUsername(post.author).length > 20 ? getUsername(post.author).slice(0,20) + '...' : getUsername(post.author)}</h4>
                                 <p className={styles.title}>{post.title}</p>
                                 <p>{post.content.length > 20 ? post.content.slice(0,20) + '...' : post.content}</p>
                                 <p>Comments: {post.comments.length}</p>
@@ -231,6 +236,12 @@ export default function Dashboard () {
                             comments={activePost.comments.length} 
                             created_at={formatDate(activePost.created_at)} 
                             author={getUsername(Number(activePost.author))}
+                            authorId={activePost.author}
+                            commentsList={activePost.comments}
+                            postId={activePost.id}
+                            adminId={getId(ako)}
+                            onPostDelete={loadEverythingAtOnce}
+                            onCommentDelete={loadEverythingAtOnce}
                             onClose={() => setActivePost(null)}/>
                         }
                     </>
@@ -261,33 +272,26 @@ export default function Dashboard () {
                         }
                     </>
                     <>
-                        {overView === 'reports' ? reports.flat().map(report => (
-                            <>
-                                <div className={styles.report} key={`${report.report_date}`} style={{backgroundColor: bg2, color: fontColor}}>
-                                    <div className={styles.report} key={report.id}>
-                                        <div className={styles.report_summary}>
-                                            <h4>{getUsername(report.complainant)}</h4>
-                                            <p>{getUsername(report.reported_author)}</p>
-                                            <p>{report.reported_object}</p>
-                                            <p>{formatDate(report.report_date)}</p>
-                                            <div className={styles.buttons}>
-                                                <button onClick={() => viewReport(report)} className={styles.view_btn}>View</button>
-                                                <button onClick={b => removeReport(report.id, report.reported_object)} className={styles.remove_btn}>Remove</button>
-                                            </div>
-                                        </div>
+                        {overView === 'reports' ? reports.map(report => (
+                            <div className={styles.report} key={report.id} style={{backgroundColor: bg2, color: fontColor}}>
+                                <div className={styles.report_summary}>
+                                    <h4>{getUsername(report.complainant)}</h4>
+                                    <p>{getUsername(report.reported_author)}</p>
+                                    <p>{report.reported_object}</p>
+                                    <p>{formatDate(report.report_date)}</p>
+                                    <div className={styles.buttons}>
+                                        <button onClick={() => viewReport(report)} className={styles.view_btn}>View</button>
+                                        <button onClick={b => removeReport(report.id, report.reported_object)} className={styles.remove_btn}>Remove</button>
                                     </div>
                                 </div>
-                                </>
-                            ))
-                            :
-                            null
-                            }
+                            </div>
+                        )) : null }
                                 {activeReport && 
                                     <ViewReport onClose={() => setActiveReport(null)} 
                                     complainant={getUsername(activeReport.complainant)} 
                                     complainant_id={activeReport.complainant}
                                     item_type={activeReport.reported_object}
-                                    item_author={getUsername(activeReport.complainant)}
+                                    item_author={getUsername(activeReport.reported_author)}
                                     item_id={activeReport.id}
                                     title={activeReport.title}
                                     content={activeReport.content}

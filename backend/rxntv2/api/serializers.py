@@ -93,16 +93,84 @@ class UserProfileSerializer(serializers.ModelSerializer):
     
 class ReportNonUserSerializer(serializers.ModelSerializer):
     complainant = serializers.PrimaryKeyRelatedField(read_only=True)
-    
+
     class Meta:
         model = ReportNonUser
-        fields = ['id', 'complainant', 'reported_author', 'reported_object', 'reported_id', 'content', 'title', 'reason', 'report_date']
-    
+        fields = [
+            'id',
+            'complainant',
+            'reported_author',
+            'reported_object',
+            'reported_id',
+            'content',
+            'title',
+            'reason',
+            'report_date',
+            'status',
+            'admin_notes',
+            'appeal_message',
+            'resolved_by',
+            'resolved_at',
+        ]
+        read_only_fields = [
+            'complainant',
+            'report_date',
+            'status',
+            'admin_notes',
+            'appeal_message',
+            'resolved_by',
+            'resolved_at',
+        ]
+
 class ReportUserSerializer(serializers.ModelSerializer):
+    complainant = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = ReportUser
-        fields = ['id', 'complainant', 'reason', 'report_date', 'reported_author', 'reported_object']
-        read_only_fields = ['complainant', 'reported_object']
+        fields = [
+            'id',
+            'complainant',
+            'reported_author',
+            'reason',
+            'report_date',
+            'reported_object',
+            'status',
+            'admin_notes',
+            'appeal_message',
+            'resolved_by',
+            'resolved_at',
+        ]
+        read_only_fields = [
+            'complainant',
+            'report_date',
+            'reported_object',
+            'status',
+            'admin_notes',
+            'appeal_message',
+            'resolved_by',
+            'resolved_at',
+        ]
+        
+class ReportNonUserAppealSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportNonUser
+        fields = ['appeal_message']
+
+class ReportNonUserAppealSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportNonUser
+        fields = ['appeal_message']
+
+class ReportNonUserModerateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportNonUser
+        fields = ['status', 'admin_notes']
+
+class ReportUserModerateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportUser
+        fields = ['status', 'admin_notes']
+
         
 class NotificationSerializer(serializers.ModelSerializer):
     class Meta:

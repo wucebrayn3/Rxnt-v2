@@ -8,7 +8,7 @@
     color: var(--hover);
     cursor: pointer;
     margin: 0;
-    z-index: 1;
+    z-index: 0;
     text-align: end;
     transition: 0.2s;
 }

@@ -58,6 +58,12 @@ class Follow(models.Model):
         return f'{self.follower.username} followed {self.following.username}'
     
 class ReportNonUser(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Under review', 'Under review'),
+        ('Resolved', 'Resolved'),
+        ('Dismissed', 'Dismissed'),
+    ]
     complainant = models.ForeignKey(User, on_delete=models.CASCADE, related_name='complaint_sender') # who reported
     reported_author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='complaint_receiver') # who owns reported content
     reported_object = models.CharField(max_length=15) # post or comment
@@ -67,15 +73,34 @@ class ReportNonUser(models.Model):
     reason = models.TextField(max_length=255)
     report_date = models.DateTimeField(auto_now_add=True)
     
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    admin_notes = models.TextField(blank=True, null=True)
+    appeal_message = models.TextField(blank=True, null=True, max_length=100)
+    resolved_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name='resolved_nonuser_reports')
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    
     def __str__(self):
         return f'Object type: {self.reported_object}, reported by: {self.complainant.username}'
     
 class ReportUser(models.Model):
+    STATUS_CHOICES = [
+        ('Pending', 'Pending'),
+        ('Under review', 'Under review'),
+        ('Resolved', 'Resolved'),
+        ('Dismissed', 'Dismissed'),
+    ]
     complainant = models.ForeignKey(User, on_delete=models.CASCADE) # who reported
     reported_author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_user') # who is being reported
     reason = models.TextField(max_length=255)
     reported_object = models.CharField(max_length=4, default='User')
     report_date = models.DateTimeField(auto_now_add=True)
+    
+    # updated additional fields to support our user appeal cases
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    admin_notes = models.TextField(blank=True, null=True)
+    appeal_message = models.TextField(blank=True, null=True, max_length=100)
+    resolved_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name='resolved_user_reports')
+    resolved_at = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):
         return f'Reported user: {self.reported_user.username}'

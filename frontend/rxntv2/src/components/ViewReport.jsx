@@ -32,7 +32,7 @@ export default function ViewReport ({ onClose, complainant, complainant_id, item
         try {
             const response = await axiosInstance.post('app/notifications/',
                 {
-                    recipient: sendTo,
+                    recipients: [sendTo],
                     sender: admin,
                     topic: e.target[0].value,
                     content: e.target[1].value
@@ -40,6 +40,45 @@ export default function ViewReport ({ onClose, complainant, complainant_id, item
             )
         } catch (err) {
             console.error(`Hindi ma-send notification pare: ${err}`)
+        }
+    }
+
+    const deleteReport = async () => {
+        try {
+            if (item_type === 'User') {
+                await axiosInstance.delete(`app/report/user/${item_id}/delete/`)
+            } else {
+                await axiosInstance.delete(`app/report/content/${item_id}/delete/`)
+            }
+            onClose();
+        } catch (err) {
+            console.error('Failed to delete report', err)
+        }
+    }
+
+    const moderateReport = async () => {
+        try {
+            if (item_type === 'User') {
+                await axiosInstance.post(`app/report/user/${item_id}/moderate/`)
+            } else {
+                await axiosInstance.post(`app/report/content/${item_id}/moderate/`)
+            }
+            onClose();
+        } catch (err) {
+            console.error('Failed to moderate report', err)
+        }
+    }
+
+    const appealReport = async () => {
+        try {
+            if (item_type === 'User') {
+                await axiosInstance.post(`app/report/user/${item_id}/appeal/`)
+            } else {
+                await axiosInstance.post(`app/report/content/${item_id}/appeal/`)
+            }
+            onClose();
+        } catch (err) {
+            console.error('Failed to appeal report', err)
         }
     }
 
@@ -73,7 +112,12 @@ export default function ViewReport ({ onClose, complainant, complainant_id, item
                     <h4>Complainant: {complainant}</h4>
                     <h4>Reported Item Author: {item_author}</h4>
                 </div>
-                <button className={styles.approve} onClick={approveReport}>Approve Report</button>
+                <div className={styles.action_row} style={{display: 'flex', gap: '8px', marginTop: '12px'}}>
+                    <button className={styles.approve} onClick={approveReport}>Approve Report</button>
+                    <button className={styles.moderate || ''} onClick={() => { if(window.confirm('Confirm moderate action?')) moderateReport()}}>Moderate</button>
+                    <button className={styles.delete || ''} onClick={() => { if(window.confirm('Delete this report?')) deleteReport()}}>Delete Report</button>
+                    <button className={styles.appeal || ''} onClick={() => { if(window.confirm('Trigger appeal for this report?')) appealReport()}}>Appeal</button>
+                </div>
                 {toggleApprove && 
                     <form action="" onSubmit={sendNotification}>
                         <label htmlFor="topic">Topic:</label>

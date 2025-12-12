@@ -11,6 +11,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import UserSerializer, CommentSerializer, PostSerializer, UserProfileSerializer, ReportNonUserSerializer, ReportUserSerializer, NotificationSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from .models import Post, Comment, Follow, ReportNonUser, ReportUser, Notification
+from django.utils.timezone import now
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -316,6 +317,114 @@ class DashboardVIew(APIView): # will get everything
             'non_user_reports': self.get_non_user_reports(),
             'user_reports': self.get_user_reports(),
         })
+        
+        
+        
+        
+        
+class ReportNonUserDetailView(generics.RetrieveAPIView):
+    queryset = ReportNonUser.objects.all()
+    serializer_class = ReportNonUserSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+
+class ReportUserDetailView(generics.RetrieveAPIView):
+    queryset = ReportUser.objects.all()
+    serializer_class = ReportUserSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+    
+class ReportNonUserAppealView(generics.UpdateAPIView):
+    queryset = ReportNonUser.objects.all()
+    serializer_class = ReportNonUserSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        obj = super().get_object()
+
+        # Only the reported_author can appeal
+        if obj.reported_author != self.request.user:
+            raise PermissionDenied("You are not allowed to appeal this report.")
+        
+        return obj
+
+    def partial_update(self, request, *args, **kwargs):
+        # Only allow updating appeal_message
+        request.data._mutable = True
+        request.data = {"appeal_message": request.data.get("appeal_message", "")}
+        
+        return super().partial_update(request, *args, **kwargs)
+
+class ReportUserAppealView(generics.UpdateAPIView):
+    queryset = ReportUser.objects.all()
+    serializer_class = ReportUserSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        obj = super().get_object()
+        if obj.reported_author != self.request.user:
+            raise PermissionDenied("You are not allowed to appeal this report.")
+        return obj
+
+    def partial_update(self, request, *args, **kwargs):
+        request.data = {"appeal_message": request.data.get("appeal_message", "")}
+        return super().partial_update(request, *args, **kwargs)
+
+class ReportNonUserModerateView(generics.UpdateAPIView):
+    queryset = ReportNonUser.objects.all()
+    serializer_class = ReportNonUserSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+
+    def partial_update(self, request, *args, **kwargs):
+        
+        allowed_fields = {"status", "admin_notes"}
+
+        cleaned_data = {
+            field: value
+            for field, value in request.data.items()
+            if field in allowed_fields
+        }
+
+        # Add resolution metadata automatically
+        if cleaned_data.get("status") == "Resolved":
+            cleaned_data["resolved_by"] = self.request.user.id
+            cleaned_data["resolved_at"] = now()
+
+        request.data = cleaned_data
+        return super().partial_update(request, *args, **kwargs)
+    
+class ReportUserModerateView(generics.UpdateAPIView):
+    queryset = ReportUser.objects.all()
+    serializer_class = ReportUserSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]
+
+    def partial_update(self, request, *args, **kwargs):
+
+        # Only allow admin to update certain fields
+        allowed_fields = {"status", "admin_notes"}
+
+        cleaned_data = {
+            field: value
+            for field, value in request.data.items()
+            if field in allowed_fields
+        }
+
+        # If admin marks the case as resolved
+        if cleaned_data.get("status") == "Resolved":
+            cleaned_data["resolved_by"] = self.request.user.id
+            cleaned_data["resolved_at"] = now()
+
+        request.data = cleaned_data
+
+        return super().partial_update(request, *args, **kwargs)
+
+
+
+
         
 class ReportNonUserView(generics.CreateAPIView):
     queryset = ReportNonUser.objects.all()

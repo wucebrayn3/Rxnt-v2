@@ -10,6 +10,7 @@ import CommentOptionBtn from "./CommentOption";
 import Header from "./Header";
 import CreatePostPanel from "./CreatePost";
 import SearchUser from "./SearchUser";
+import Success from "./Success";
 
 export default function UserProfile() {
     
@@ -27,6 +28,9 @@ export default function UserProfile() {
     const [navState, setNavState] = useState(null);
     const [email, setEmail] = useState(null)
     const [pfp, setPfp] = useState(null);
+
+    const [successInfo, setSuccessInfo] = useState(null);
+    const [reset, setReset] = useState(0);
 
     const [isStaff, setIsStaff] = useState(false);
 
@@ -113,29 +117,45 @@ export default function UserProfile() {
     }
 
     const saveEdit = async (e) => {
-        e.preventDefault()
-        console.log(e.target[0].value)
-        console.log(e.target[1].value)
-
+        e.preventDefault();
         try {
-            const response = await axiosInstance.patch(`app/edit-post/${editTarget}/`, { title: e.target[0].value, content: e.target[1].value }) ; console.log(response); setEditTarget(null)
-        } catch (err) { console.log('Something went wrong with updating: ', err) }
- 
-    }
+            const response = await axiosInstance.patch(
+                `app/edit-post/${editTarget}/`,
+                { title: e.target[0].value, content: e.target[1].value }
+            );
+            console.log(response);
+            setEditTarget(null);
+
+            setSuccessInfo({ target: 'post', action: 'edit' });
+            setReset(prev => prev + 1);
+
+            loadProfile();
+
+        } catch (err) {
+            console.log('Something went wrong with updating: ', err);
+        }
+    };
+
 
     const saveComment = async (e) => {
-        console.log(e.target[0].value)
-
+        e.preventDefault();
         try {
-            const response = await axiosInstance.patch(`/app/edit-comment/${editTarget}/`,
-                {
-                    content: e.target[0].value
-                }
-            )
+            const response = await axiosInstance.patch(
+                `/app/edit-comment/${editTarget}/`,
+                { content: e.target[0].value }
+            );
+            console.log(response);
+
+            setSuccessInfo({ target: 'comment', action: 'edit' });
+            setReset(prev => prev + 1);
+
+            setEditTarget(null);
+            loadProfile();
         } catch (err) {
-            console.error(`Walastek: ${err}`)
+            console.error(`Failed to update comment: ${err}`);
         }
-    }
+    };
+
 
     const PostConstructor = ({ obj }) => (
         ((obj && obj['posts']) || []).map((o) => (
@@ -272,23 +292,37 @@ export default function UserProfile() {
     };
 
     return (
-        <div style={{placeItems: 'center', backgroundColor: mode}}>
-            <Header  onCreatePost={()=>togglePanel('createPost')} onSearchUser={()=>togglePanel('searchUser')} users={users}/>
-            {navState == 'createPost' && <CreatePostPanel />}
-            {navState == 'searchUser' && <SearchUser />}
-            <div className={styles.main}>
-                {userData && users && <PostConstructor obj={userData}/>}
-                <div className={styles.profile}>
-                    <div className={styles.upper_div} style={{backgroundColor: bg2, border: `5px ${mode} solid`}}></div>
-                    <div className={styles.lower_div} style={{backgroundColor: color, border: `5px ${mode} solid`}}>
+        <>
+            {successInfo && (
+                <Success
+                    key={reset}             
+                    target={successInfo.target}
+                    action={successInfo.action}
+                    reset={reset}
+                />
+            )}
+            <div style={{placeItems: 'center', backgroundColor: mode}}>
+                <Header  onCreatePost={()=>togglePanel('createPost')} onSearchUser={()=>togglePanel('searchUser')} users={users}/>
+                {/* {navState == 'createPost' && <CreatePostPanel />} */}
+                {navState == 'searchUser' && <SearchUser />}
+                <div className={styles.main}>
+                    {userData && users && <PostConstructor obj={userData}/>}
+                    <CreatePostPanel onPost={() => {loadComments(); loadProfile(); loadUsers();}}/>
+                    <div className={styles.profile}>
+                        <div className={styles.upper_div} style={{backgroundColor: bg2, border: `5px ${mode} solid`}}></div>
+                        <div className={styles.lower_div} style={{backgroundColor: color, border: `5px ${mode} solid`}}>
+                            <div>
+                                <h1>{user}</h1>
+                                <h3><i>{email}</i></h3>
+                            </div>
+                        </div>
+                        <div className={styles.pfp_summary}>
+                            <img src={`http://localhost:8000${pfp}`} alt="" style={{border: `5px ${mode} solid`, borderRadius: '100%', backgroundColor: mode}} />
+                        </div>
                     </div>
-                    <div className={styles.pfp_summary}>
-                        <img src={`http://localhost:8000${pfp}`} alt="" style={{border: `5px ${mode} solid`, borderRadius: '100%', backgroundColor: mode}} />
-                        <h1>{user}</h1>
-                        <h3><i>{email}</i></h3>
-                    </div>
+
                 </div>
             </div>
-        </div>
+        </>
     )
 }

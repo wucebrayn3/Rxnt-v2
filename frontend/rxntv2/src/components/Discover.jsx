@@ -4,6 +4,7 @@ import { useTheme } from "../utils/ThemeContext";
 
 import FollowButton from "./FollowButton";
 import Header from "./Header";
+import Success from "./Success";
 
 import styles from '../styles/Discover.module.css';
 

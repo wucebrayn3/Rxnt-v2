@@ -342,7 +342,6 @@ export default function Threads() {
         <div style={{ placeItems: 'center', backgroundColor: mode, color: fontColor }}>
             <Header onCreatePost={() => togglePanel('createPost')} onSearchUser={() => togglePanel('searchUser')} users={users} />
 
-            {navState == 'createPost' && <CreatePostPanel onPost={loadPosts}/>}
             {navState == 'searchUser' && <SearchUser />}
 
             <div className={styles.main}>
@@ -352,6 +351,7 @@ export default function Threads() {
                         <a href="/discover/">Discover other users.</a>
                     </div>
                 }
+                <CreatePostPanel onPost={loadAll}/>
             </div>
 
             <div className={styles.trays} style={{ border: 'none', '--shadow': shadow, '--color': color }}>

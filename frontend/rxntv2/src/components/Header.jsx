@@ -78,10 +78,6 @@ export default function Header({ onCreatePost, onSearchUser, users }) {
     >
       <img src={logo} className={styles.logo} style={{position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', margin:'0', height: '100%', '--shadow': color}}></img>
       <div className={styles.btn_container} style={{'--shadow': color}}>
-        
-            <button  onClick={onCreatePost} className={styles.add_button}>
-              <img style={{height: '100%'}} src={addIcon} alt="" />
-            </button>
 
             <button onClick={onSearchUser} className={styles.search_button}>
               <img style={{height: '100%'}} src={searchIcon}></img>

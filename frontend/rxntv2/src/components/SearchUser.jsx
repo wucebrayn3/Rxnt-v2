@@ -7,7 +7,7 @@ import styles from '../styles/Threads.module.css'
 
 export default function SearchUser () {
 
-    const { color, fontColor, shadow } = useTheme();
+    const { color, fontColor, shadow, bg3 } = useTheme();
 
     const [query, setQuery] = useState('');
     const [users, setUsers] = useState([]);
@@ -31,7 +31,7 @@ export default function SearchUser () {
     }, [query])
 
     return (
-        <div className={styles.post_panel} style={{border: 'none', boxShadow: `0 5px 10px ${shadow}`, backgroundColor: color, color: fontColor}}>
+        <div className={styles.search_panel} style={{border: 'none', boxShadow: `0 5px 10px ${shadow}`, backgroundColor: bg3, color: fontColor}}>
             <h2>Search User:</h2>
             <form action="">
                 <legend htmlFor='searchbar'>Search</legend>
